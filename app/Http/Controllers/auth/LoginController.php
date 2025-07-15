@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-// use RealRashid\SweetAlert\Facades\Alert;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class LoginController extends Controller
 {
@@ -35,15 +35,18 @@ class LoginController extends Controller
 
             // Redirect based on user role
             if (Auth::user()->role === 'admin') {
-                return redirect()->route('admin.dashboard')->with('success', 'Login berhasil! Selamat datang di dashboard admin.');
+                Alert::success('Berhasil!', 'Login berhasil! Selamat datang di dashboard admin.');
+                return redirect()->route('admin.dashboard');
             }
 
-            return redirect()->intended('/')->with('success', 'Login berhasil! Selamat datang.');
+            Alert::success('Berhasil!', 'Login berhasil! Selamat datang.');
+            return redirect()->intended('/');
         }
 
+        Alert::error('Gagal!', 'Email atau password salah!');
         return back()->withErrors([
             'email' => 'Email atau password salah.',
-        ])->onlyInput('email')->with('error', 'Email atau password salah!');
+        ])->onlyInput('email');
     }
 
     public function logout(Request $request)
@@ -52,6 +55,7 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/')->with('success', 'Anda telah logout.');
+        Alert::success('Berhasil!', 'Anda telah logout.');
+        return redirect('/');
     }
 }

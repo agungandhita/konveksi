@@ -18,4 +18,14 @@ class PortfolioController extends Controller
         
         return view('frontend.portfolio.index', compact('portfolio'));
     }
+
+    /**
+     * Menampilkan detail portfolio
+     */
+    public function show($id)
+    {
+        $portfolio = Portofolio::aktif()->findOrFail($id);
+        
+        return view('frontend.portfolio.show', compact('portfolio'));
+    }
 }

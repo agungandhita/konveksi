@@ -14,6 +14,7 @@ use App\Http\Controllers\frontend\PortfolioController as FrontendPortfolioContro
 use App\Http\Controllers\frontend\AboutController;
 use App\Http\Controllers\frontend\ContactController;
 use App\Http\Controllers\frontend\PesananController;
+use App\Http\Controllers\frontend\ChatbotController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,9 +39,15 @@ Route::get('/', function () {
 Route::get('/layanan', [FrontendLayananController::class, 'index'])->name('layanan.index');
 Route::get('/katalog', [KatalogController::class, 'index'])->name('katalog.index');
 Route::get('/katalog/{id}', [KatalogController::class, 'show'])->name('katalog.show');
-Route::get('/portfolio', [FrontendPortfolioController::class, 'index'])->name('portfolio.index');
+Route::get('/portfolio', [FrontendPortfolioController::class, 'index'])->name('frontend.portfolio.index');
+Route::get('/portfolio/{id}', [FrontendPortfolioController::class, 'show'])->name('frontend.portfolio.show');
 Route::get('/tentang-kami', [AboutController::class, 'index'])->name('about.index');
 Route::get('/kontak', [ContactController::class, 'index'])->name('contact.index');
+
+// Chatbot Routes
+Route::post('/chatbot/send-message', [ChatbotController::class, 'sendMessage'])->name('chatbot.send-message');
+Route::get('/chatbot/history', [ChatbotController::class, 'getChatHistory'])->name('chatbot.history');
+Route::post('/chatbot/clear-history', [ChatbotController::class, 'clearChatHistory'])->name('chatbot.clear-history');
 
 // Pesanan Routes (Protected)
 Route::middleware('auth')->group(function () {
@@ -174,5 +181,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/pesanan/export', [AdminPesananController::class, 'export'])->name('admin.pesanan.export');
     Route::get('admin/pesanan/statistics', [AdminPesananController::class, 'statistics'])->name('admin.pesanan.statistics');
 
+    // Laporan Management Routes
+    Route::get('admin/laporan', [App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('admin.laporan.index');
+    Route::get('admin/laporan/export/csv', [App\Http\Controllers\Admin\LaporanController::class, 'exportCsv'])->name('admin.laporan.export.csv');
+    Route::get('admin/laporan/export/excel', [App\Http\Controllers\Admin\LaporanController::class, 'exportExcel'])->name('admin.laporan.export.excel');
 
 });

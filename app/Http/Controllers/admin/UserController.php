@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class UserController extends Controller
 {
@@ -64,8 +65,8 @@ class UserController extends Controller
 
         User::create($validated);
 
-        return redirect()->route('admin.users.index')
-                        ->with('success', 'User berhasil ditambahkan.');
+        Alert::success('Berhasil!', 'User berhasil ditambahkan.');
+        return redirect()->route('admin.users.index');
     }
 
     /**
@@ -107,8 +108,8 @@ class UserController extends Controller
 
         $user->update($validated);
 
-        return redirect()->route('admin.users.index')
-                        ->with('success', 'User berhasil diperbarui.');
+        Alert::success('Berhasil!', 'User berhasil diperbarui.');
+        return redirect()->route('admin.users.index');
     }
 
     /**
@@ -118,14 +119,14 @@ class UserController extends Controller
     {
         // Prevent deleting the current authenticated user
         if ($user->id === auth()->id()) {
-            return redirect()->route('admin.users.index')
-                            ->with('error', 'Anda tidak dapat menghapus akun sendiri.');
+            Alert::error('Gagal!', 'Anda tidak dapat menghapus akun sendiri.');
+            return redirect()->route('admin.users.index');
         }
 
         $user->delete();
 
-        return redirect()->route('admin.users.index')
-                        ->with('success', 'User berhasil dihapus.');
+        Alert::success('Berhasil!', 'User berhasil dihapus.');
+        return redirect()->route('admin.users.index');
     }
 
     /**
@@ -136,7 +137,7 @@ class UserController extends Controller
         // This can be implemented if you add a status field to users table
         // $user->update(['status' => !$user->status]);
 
-        return redirect()->route('admin.users.index')
-                        ->with('success', 'Status user berhasil diubah.');
+        Alert::success('Berhasil!', 'Status user berhasil diubah.');
+        return redirect()->route('admin.users.index');
     }
 }

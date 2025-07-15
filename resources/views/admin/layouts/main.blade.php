@@ -14,6 +14,7 @@
     </div>
 
     @include('admin.partials.end')
+    @include('sweetalert::alert')
     @stack('scripts')
 </body>
 </html>

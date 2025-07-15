@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Layanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class LayananController extends Controller
 {
@@ -78,12 +79,11 @@ class LayananController extends Controller
 
         try {
             Layanan::create($request->all());
-            return redirect()->route('admin.layanan.index')
-                ->with('success', 'Layanan berhasil ditambahkan.');
+            Alert::success('Berhasil!', 'Layanan berhasil ditambahkan.');
+            return redirect()->route('admin.layanan.index');
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat menyimpan layanan.')
-                ->withInput();
+            Alert::error('Gagal!', 'Terjadi kesalahan saat menyimpan layanan.');
+            return redirect()->back()->withInput();
         }
     }
 
@@ -136,12 +136,11 @@ class LayananController extends Controller
 
         try {
             $layanan->update($request->all());
-            return redirect()->route('admin.layanan.index')
-                ->with('success', 'Layanan berhasil diperbarui.');
+            Alert::success('Berhasil!', 'Layanan berhasil diperbarui.');
+            return redirect()->route('admin.layanan.index');
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat memperbarui layanan.')
-                ->withInput();
+            Alert::error('Gagal!', 'Terjadi kesalahan saat memperbarui layanan.');
+            return redirect()->back()->withInput();
         }
     }
 
@@ -152,11 +151,11 @@ class LayananController extends Controller
     {
         try {
             $layanan->delete();
-            return redirect()->route('admin.layanan.index')
-                ->with('success', 'Layanan berhasil dihapus.');
+            Alert::success('Berhasil!', 'Layanan berhasil dihapus.');
+            return redirect()->route('admin.layanan.index');
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat menghapus layanan.');
+            Alert::error('Gagal!', 'Terjadi kesalahan saat menghapus layanan.');
+            return redirect()->back();
         }
     }
 
@@ -172,8 +171,8 @@ class LayananController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()
-                ->with('error', 'Pilih minimal satu layanan untuk diproses.');
+            Alert::error('Gagal!', 'Pilih minimal satu layanan untuk diproses.');
+            return redirect()->back();
         }
 
         try {
@@ -196,11 +195,11 @@ class LayananController extends Controller
                     break;
             }
 
-            return redirect()->route('admin.layanan.index')
-                ->with('success', $message);
+            Alert::success('Berhasil!', $message);
+            return redirect()->route('admin.layanan.index');
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat memproses layanan.');
+            Alert::error('Gagal!', 'Terjadi kesalahan saat memproses layanan.');
+            return redirect()->back();
         }
     }
 
@@ -214,11 +213,11 @@ class LayananController extends Controller
             $layanan->update(['status' => $newStatus]);
 
             $statusText = $newStatus === 'aktif' ? 'diaktifkan' : 'dinonaktifkan';
-            return redirect()->back()
-                ->with('success', "Layanan berhasil $statusText.");
+            Alert::success('Berhasil!', "Layanan berhasil $statusText.");
+            return redirect()->back();
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat mengubah status layanan.');
+            Alert::error('Gagal!', 'Terjadi kesalahan saat mengubah status layanan.');
+            return redirect()->back();
         }
     }
 }

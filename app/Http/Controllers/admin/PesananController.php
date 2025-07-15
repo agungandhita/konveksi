@@ -8,6 +8,7 @@ use App\Models\Layanan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PesananController extends Controller
 {
@@ -81,7 +82,8 @@ class PesananController extends Controller
             'status' => $request->status
         ]);
         
-        return redirect()->back()->with('success', 'Status pesanan berhasil diupdate.');
+        Alert::success('Berhasil!', 'Status pesanan berhasil diupdate.');
+        return redirect()->back();
     }
 
     /**
@@ -118,7 +120,8 @@ class PesananController extends Controller
                 break;
         }
 
-        return redirect()->back()->with('success', $message);
+        Alert::success('Berhasil!', $message);
+        return redirect()->back();
     }
 
     /**
@@ -133,8 +136,8 @@ class PesananController extends Controller
         
         $pesanan->delete();
         
-        return redirect()->route('admin.pesanan.index')
-                        ->with('success', 'Pesanan berhasil dihapus.');
+        Alert::success('Berhasil!', 'Pesanan berhasil dihapus.');
+        return redirect()->route('admin.pesanan.index');
     }
 
     /**

@@ -20,30 +20,9 @@
         </div>
     </div>
 
-    <!-- Alert Messages -->
-    @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 relative" role="alert">
-            <div class="flex items-center">
-                <i class="fas fa-check-circle mr-2"></i>
-                <span>{{ session('success') }}</span>
-                <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.parentElement.remove()">
-                    <i class="fas fa-times text-green-500 hover:text-green-700"></i>
-                </button>
-            </div>
-        </div>
-    @endif
 
-    @if(session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 relative" role="alert">
-            <div class="flex items-center">
-                <i class="fas fa-exclamation-circle mr-2"></i>
-                <span>{{ session('error') }}</span>
-                <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.parentElement.remove()">
-                    <i class="fas fa-times text-red-500 hover:text-red-700"></i>
-                </button>
-            </div>
-        </div>
-    @endif
+
+
 
     <!-- Search and Filter Card -->
     <div class="bg-white shadow rounded-lg mb-6">

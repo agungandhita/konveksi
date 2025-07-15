@@ -70,7 +70,7 @@
                 Komitmen kami untuk memberikan yang terbaik bagi pelanggan dan berkontribusi pada industri konveksi Indonesia
             </p>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <!-- Vision -->
             <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
@@ -82,7 +82,7 @@
                     Menjadi perusahaan konveksi terdepan di Indonesia yang dikenal karena kualitas produk, inovasi desain, dan pelayanan pelanggan yang luar biasa, serta berkontribusi pada pengembangan industri fashion lokal.
                 </p>
             </div>
-            
+
             <!-- Mission -->
             <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
                 <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
@@ -121,7 +121,7 @@
                 Prinsip-prinsip yang menjadi fondasi dalam setiap langkah perjalanan bisnis kami
             </p>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <!-- Quality -->
             <div class="text-center">
@@ -133,7 +133,7 @@
                     Komitmen pada standar kualitas tinggi dalam setiap produk yang kami hasilkan
                 </p>
             </div>
-            
+
             <!-- Innovation -->
             <div class="text-center">
                 <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -144,7 +144,7 @@
                     Terus berinovasi dalam desain, teknologi, dan metode produksi untuk hasil terbaik
                 </p>
             </div>
-            
+
             <!-- Trust -->
             <div class="text-center">
                 <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -155,7 +155,7 @@
                     Membangun hubungan jangka panjang berdasarkan kepercayaan dan transparansi
                 </p>
             </div>
-            
+
             <!-- Service -->
             <div class="text-center">
                 <div class="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -179,7 +179,7 @@
                 Dibalik setiap produk berkualitas, ada tim profesional yang berdedikasi tinggi
             </p>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- Team Member 1 -->
             <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-center">
@@ -192,7 +192,7 @@
                     Memimpin visi perusahaan dengan pengalaman 15+ tahun di industri tekstil dan fashion
                 </p>
             </div>
-            
+
             <!-- Team Member 2 -->
             <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-center">
                 <div class="w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -204,7 +204,7 @@
                     Kreator di balik desain-desain inovatif dengan background fashion design dari universitas terkemuka
                 </p>
             </div>
-            
+
             <!-- Team Member 3 -->
             <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-center">
                 <div class="w-24 h-24 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PortoflioController extends Controller
 {
@@ -106,12 +107,11 @@ class PortoflioController extends Controller
             }
 
             Portofolio::create($data);
-            return redirect()->route('admin.portofolio.index')
-                ->with('success', 'Portofolio berhasil ditambahkan.');
+            Alert::success('Berhasil!', 'Portofolio berhasil ditambahkan.');
+            return redirect()->route('admin.portofolio.index');
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat menyimpan portofolio.')
-                ->withInput();
+            Alert::error('Gagal!', 'Terjadi kesalahan saat menyimpan portofolio.');
+            return redirect()->back()->withInput();
         }
     }
 
@@ -192,12 +192,11 @@ class PortoflioController extends Controller
             }
 
             $portofolio->update($data);
-            return redirect()->route('admin.portofolio.index')
-                ->with('success', 'Portofolio berhasil diperbarui.');
+            Alert::success('Berhasil!', 'Portofolio berhasil diperbarui.');
+            return redirect()->route('admin.portofolio.index');
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat memperbarui portofolio.')
-                ->withInput();
+            Alert::error('Gagal!', 'Terjadi kesalahan saat memperbarui portofolio.');
+            return redirect()->back()->withInput();
         }
     }
 
@@ -216,11 +215,11 @@ class PortoflioController extends Controller
             }
 
             $portofolio->delete();
-            return redirect()->route('admin.portofolio.index')
-                ->with('success', 'Portofolio berhasil dihapus.');
+            Alert::success('Berhasil!', 'Portofolio berhasil dihapus.');
+            return redirect()->route('admin.portofolio.index');
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat menghapus portofolio.');
+            Alert::error('Gagal!', 'Terjadi kesalahan saat menghapus portofolio.');
+            return redirect()->back();
         }
     }
 
@@ -236,8 +235,8 @@ class PortoflioController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()
-                ->with('error', 'Pilih minimal satu portofolio untuk diproses.');
+            Alert::error('Gagal!', 'Pilih minimal satu portofolio untuk diproses.');
+            return redirect()->back();
         }
 
         try {
@@ -270,11 +269,11 @@ class PortoflioController extends Controller
                     break;
             }
 
-            return redirect()->route('admin.portofolio.index')
-                ->with('success', $message);
+            Alert::success('Berhasil!', $message);
+            return redirect()->route('admin.portofolio.index');
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat memproses portofolio.');
+            Alert::error('Gagal!', 'Terjadi kesalahan saat memproses portofolio.');
+            return redirect()->back();
         }
     }
 

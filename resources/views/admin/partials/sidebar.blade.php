@@ -68,7 +68,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.laporan.*') ? 'text-blue-700 bg-blue-50 border-r-2 border-blue-500' : 'text-slate-700 hover:bg-blue-50 hover:text-blue-700' }}">
+                <a href="{{ route('admin.laporan.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.laporan.*') ? 'text-blue-700 bg-blue-50 border-r-2 border-blue-500' : 'text-slate-700 hover:bg-blue-50 hover:text-blue-700' }}">
                     <i class="fas fa-chart-bar mr-3"></i>
                     Laporan
                 </a>

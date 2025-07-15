@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ProdukController extends Controller
 {
@@ -90,12 +91,11 @@ class ProdukController extends Controller
             }
 
             Produk::create($data);
-            return redirect()->route('admin.produk.index')
-                ->with('success', 'Produk berhasil ditambahkan.');
+            Alert::success('Berhasil!', 'Produk berhasil ditambahkan.');
+            return redirect()->route('admin.produk.index');
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat menyimpan produk.')
-                ->withInput();
+            Alert::error('Gagal!', 'Terjadi kesalahan saat menyimpan produk.');
+            return redirect()->back()->withInput();
         }
     }
 
@@ -164,12 +164,11 @@ class ProdukController extends Controller
             }
 
             $produk->update($data);
-            return redirect()->route('admin.produk.index')
-                ->with('success', 'Produk berhasil diperbarui.');
+            Alert::success('Berhasil!', 'Produk berhasil diperbarui.');
+            return redirect()->route('admin.produk.index');
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat memperbarui produk.')
-                ->withInput();
+            Alert::error('Gagal!', 'Terjadi kesalahan saat memperbarui produk.');
+            return redirect()->back()->withInput();
         }
     }
 
@@ -183,11 +182,11 @@ class ProdukController extends Controller
             $produk->deleteFoto();
             
             $produk->delete();
-            return redirect()->route('admin.produk.index')
-                ->with('success', 'Produk berhasil dihapus.');
+            Alert::success('Berhasil!', 'Produk berhasil dihapus.');
+            return redirect()->route('admin.produk.index');
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat menghapus produk.');
+            Alert::error('Gagal!', 'Terjadi kesalahan saat menghapus produk.');
+            return redirect()->back();
         }
     }
 
@@ -203,8 +202,8 @@ class ProdukController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->back()
-                ->with('error', 'Pilih minimal satu produk untuk diproses.');
+            Alert::error('Gagal!', 'Pilih minimal satu produk untuk diproses.');
+            return redirect()->back();
         }
 
         try {
@@ -232,11 +231,11 @@ class ProdukController extends Controller
                     break;
             }
 
-            return redirect()->route('admin.produk.index')
-                ->with('success', $message);
+            Alert::success('Berhasil!', $message);
+            return redirect()->route('admin.produk.index');
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat memproses produk.');
+            Alert::error('Gagal!', 'Terjadi kesalahan saat memproses produk.');
+            return redirect()->back();
         }
     }
 
@@ -250,11 +249,11 @@ class ProdukController extends Controller
             $produk->update(['status' => $newStatus]);
 
             $statusText = $newStatus === 'aktif' ? 'diaktifkan' : 'dinonaktifkan';
-            return redirect()->back()
-                ->with('success', "Produk berhasil $statusText.");
+            Alert::success('Berhasil!', "Produk berhasil $statusText.");
+            return redirect()->back();
         } catch (\Exception $e) {
-            return redirect()->back()
-                ->with('error', 'Terjadi kesalahan saat mengubah status produk.');
+            Alert::error('Gagal!', 'Terjadi kesalahan saat mengubah status produk.');
+            return redirect()->back();
         }
     }
 }

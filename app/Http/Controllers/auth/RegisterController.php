@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-// use RealRashid\SweetAlert\Facades\Alert;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class RegisterController extends Controller
 {
@@ -41,10 +41,12 @@ class RegisterController extends Controller
                 'role' => 'user', // default role
             ]);
 
-            return redirect()->route('login')->with('success', 'Akun berhasil dibuat! Silakan login.');
+            Alert::success('Berhasil!', 'Akun berhasil dibuat! Silakan login.');
+            return redirect()->route('login');
 
         } catch (\Exception $e) {
-            return back()->withInput()->with('error', 'Terjadi kesalahan saat membuat akun.');
+            Alert::error('Gagal!', 'Terjadi kesalahan saat membuat akun.');
+            return back()->withInput();
         }
     }
 }

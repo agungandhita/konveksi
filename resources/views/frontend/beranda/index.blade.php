@@ -328,4 +328,294 @@
         </div>
     </div>
 </section>
+
+<!-- Chatbot Popup -->
+<div id="chatbotPopup" class="fixed bottom-4 right-4 z-50 hidden">
+    <div class="bg-white rounded-lg shadow-2xl border-2 border-gray-200 w-80 h-96 flex flex-col">
+        <!-- Header -->
+        <div class="bg-blue-600 text-white p-4 rounded-t-lg flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-3">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <div>
+                    <span class="font-semibold text-sm">Asisten Konveksi AI</span>
+                    <div class="text-xs text-blue-100">Online - Siap membantu</div>
+                </div>
+            </div>
+            <button onclick="closeChatbot()" class="text-white hover:text-blue-200 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Messages -->
+        <div id="chatMessages" class="flex-1 p-4 overflow-y-auto bg-gray-50">
+            <div class="flex items-start mb-4">
+                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                    <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <div class="bg-white rounded-lg p-3 shadow-sm border border-gray-200 max-w-xs">
+                    <p class="text-sm text-gray-800">Halo! Saya asisten virtual Konveksi Surabaya. Ada yang bisa saya bantu mengenai produk atau layanan kami?</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Typing Indicator -->
+        <div id="typingIndicator" class="px-4 py-2 text-sm text-gray-500 hidden">
+            <div class="flex items-center">
+                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                    <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <div class="bg-white rounded-lg p-3 shadow-sm border border-gray-200">
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Input -->
+        <div class="p-4 border-t border-gray-200 bg-white rounded-b-lg">
+            <form id="chatForm" class="flex space-x-2">
+                <input type="text" id="messageInput" placeholder="Ketik pesan Anda..." 
+                       class="flex-1 border-2 border-gray-400 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                       maxlength="1000">
+                <button type="submit" id="sendButton" class="bg-blue-700 hover:bg-blue-800 text-white rounded-lg px-4 py-2 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
+                    <svg id="sendIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                    <svg id="loadingIcon" class="w-4 h-4 animate-spin hidden" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Chatbot Toggle Button -->
+<button id="chatbotToggle" onclick="toggleChatbot()" 
+        class="fixed bottom-4 right-4 z-40 bg-blue-600 text-white p-4 rounded-full shadow-2xl hover:bg-blue-700 transition-all duration-300 transform hover:scale-110 border-2 border-white">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+    </svg>
+</button>
+
+<style>
+.typing-dots {
+    display: inline-flex;
+    align-items: center;
+}
+
+.typing-dots span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #64748b;
+    margin: 0 1px;
+    animation: typing 1.4s infinite ease-in-out;
+}
+
+.typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+.typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typing {
+    0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+    40% { transform: scale(1); opacity: 1; }
+}
+
+.message {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.message.user {
+    justify-content: flex-end;
+}
+
+.message-content {
+    max-width: 80%;
+    padding: 8px 12px;
+    border-radius: 12px;
+    word-wrap: break-word;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.message.user .message-content {
+     background: #2563eb;
+     color: white;
+     border-bottom-right-radius: 4px;
+     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+ }
+ 
+ .message.bot .message-content {
+     background: #f8fafc;
+     color: #1e293b;
+     border: 2px solid #e2e8f0;
+     border-bottom-left-radius: 4px;
+     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+ }
+ 
+ .message.error .message-content {
+     background: #fef2f2;
+     color: #dc2626;
+     border: 2px solid #fca5a5;
+     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+ }
+</style>
+
+<script>
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+const chatForm = document.getElementById('chatForm');
+const messageInput = document.getElementById('messageInput');
+const chatMessages = document.getElementById('chatMessages');
+const typingIndicator = document.getElementById('typingIndicator');
+const chatbotPopup = document.getElementById('chatbotPopup');
+const chatbotToggle = document.getElementById('chatbotToggle');
+const sendButton = document.getElementById('sendButton');
+const sendIcon = document.getElementById('sendIcon');
+const loadingIcon = document.getElementById('loadingIcon');
+
+function toggleChatbot() {
+    if (chatbotPopup.classList.contains('hidden')) {
+        chatbotPopup.classList.remove('hidden');
+        chatbotToggle.style.display = 'none';
+        focusMessageInput();
+    } else {
+        chatbotPopup.classList.add('hidden');
+        chatbotToggle.style.display = 'block';
+    }
+}
+
+function closeChatbot() {
+    chatbotPopup.classList.add('hidden');
+    chatbotToggle.style.display = 'block';
+}
+
+chatForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    sendMessage();
+});
+
+// Handle Enter key in message input
+messageInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+    }
+});
+
+// Auto-focus on input when chatbot opens
+function focusMessageInput() {
+    setTimeout(() => {
+        messageInput.focus();
+    }, 100);
+}
+
+async function sendMessage() {
+    const message = messageInput.value.trim();
+    
+    if (!message) {
+        return;
+    }
+    
+    // Clear initial welcome message if this is the first user message
+    const existingMessages = chatMessages.querySelectorAll('.message');
+    if (existingMessages.length === 0) {
+        const initialMessage = chatMessages.querySelector('div:not(.message)');
+        if (initialMessage) {
+            initialMessage.remove();
+        }
+    }
+    
+    // Add user message
+    addMessage(message, 'user');
+    
+    // Clear input
+    messageInput.value = '';
+    
+    // Show typing indicator and loading state
+    showTypingIndicator();
+    setLoadingState(true);
+    
+    try {
+        const response = await fetch('/chatbot/send-message', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': csrfToken
+            },
+            body: JSON.stringify({ message: message })
+        });
+        
+        const data = await response.json();
+        
+        // Hide typing indicator and loading state
+        hideTypingIndicator();
+        setLoadingState(false);
+        
+        if (response.ok && data.success) {
+            addMessage(data.message, 'bot');
+        } else {
+            addMessage('Maaf, terjadi kesalahan: ' + (data.error || 'Silakan coba lagi.'), 'error');
+        }
+        
+    } catch (error) {
+        hideTypingIndicator();
+        setLoadingState(false);
+        addMessage('Maaf, terjadi kesalahan koneksi. Silakan coba lagi.', 'error');
+        console.error('Error:', error);
+    }
+}
+
+function addMessage(text, sender) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${sender}`;
+    
+    const content = document.createElement('div');
+    content.className = 'message-content';
+    content.textContent = text;
+    
+    messageDiv.appendChild(content);
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function showTypingIndicator() {
+    typingIndicator.classList.remove('hidden');
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function hideTypingIndicator() {
+    typingIndicator.classList.add('hidden');
+}
+
+function setLoadingState(isLoading) {
+    if (isLoading) {
+        sendButton.disabled = true;
+        messageInput.disabled = true;
+        sendIcon.classList.add('hidden');
+        loadingIcon.classList.remove('hidden');
+    } else {
+        sendButton.disabled = false;
+        messageInput.disabled = false;
+        sendIcon.classList.remove('hidden');
+        loadingIcon.classList.add('hidden');
+    }
+}
+</script>
+
 @endsection

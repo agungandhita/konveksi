@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PesananController extends Controller
 {
@@ -124,8 +125,8 @@ class PesananController extends Controller
             $totalHarga = $pesanan->calculateTotalPrice();
             $pesanan->update(['total_harga' => $totalHarga]);
 
-            return redirect()->route('pembayaran.index', $pesanan->id)
-                           ->with('success', 'Pesanan berhasil dibuat! Silakan lanjutkan ke pembayaran.');
+            Alert::success('Berhasil!', 'Pesanan berhasil dibuat! Silakan lanjutkan ke pembayaran.');
+            return redirect()->route('pembayaran.index', $pesanan->id);
 
         } catch (\Exception $e) {
             return back()->withInput()

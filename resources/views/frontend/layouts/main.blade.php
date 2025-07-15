@@ -5,4 +5,4 @@
 
 @include('frontend.partials.footer')
 @include('frontend.partials.end')
-{{-- @include('sweetalert::alert') --}}
+@include('sweetalert::alert')

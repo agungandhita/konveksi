@@ -39,7 +39,7 @@
             <li class="max-lg:border-b max-lg:border-gray-300 max-lg:py-3 px-3"><a href='{{ route('katalog.index') }}'
               class="hover:text-slate-700 text-slate-900 block font-medium text-[15px]">Katalog</a>
             </li>
-            <li class="max-lg:border-b max-lg:border-gray-300 max-lg:py-3 px-3"><a href='{{ route('portfolio.index') }}'
+            <li class="max-lg:border-b max-lg:border-gray-300 max-lg:py-3 px-3"><a href='{{ route('frontend.portfolio.index') }}'
               class="hover:text-slate-700 text-slate-900 block font-medium text-[15px]">Portfolio</a>
             </li>
             <li class="max-lg:border-b max-lg:border-gray-300 max-lg:py-3 px-3"><a href='{{ route('about.index') }}'

@@ -8,6 +8,7 @@ use App\Models\Pesanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PembayaranController extends Controller
 {
@@ -86,8 +87,8 @@ class PembayaranController extends Controller
             $message = 'Pembayaran ditolak. Status pesanan dikembalikan ke menunggu pembayaran.';
         }
 
-        return redirect()->route('admin.pembayaran.index')
-                       ->with('success', $message);
+        Alert::success('Berhasil!', $message);
+        return redirect()->route('admin.pembayaran.index');
     }
 
     /**
@@ -98,7 +99,8 @@ class PembayaranController extends Controller
         $pembayaran = Pembayaran::findOrFail($id);
         
         if (!$pembayaran->bukti_pembayaran || !Storage::disk('public')->exists($pembayaran->bukti_pembayaran)) {
-            return back()->with('error', 'File bukti pembayaran tidak ditemukan.');
+            Alert::error('Gagal!', 'File bukti pembayaran tidak ditemukan.');
+            return back();
         }
 
         $filePath = storage_path('app/public/' . $pembayaran->bukti_pembayaran);
@@ -140,8 +142,8 @@ class PembayaranController extends Controller
         $count = count($pembayaranIds);
         $actionText = $action === 'terima' ? 'diterima' : 'ditolak';
         
-        return redirect()->route('admin.pembayaran.index')
-                       ->with('success', "{$count} pembayaran berhasil {$actionText}.");
+        Alert::success('Berhasil!', "{$count} pembayaran berhasil {$actionText}.");
+        return redirect()->route('admin.pembayaran.index');
     }
 
     /**

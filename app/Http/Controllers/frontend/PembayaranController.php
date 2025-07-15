@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PembayaranController extends Controller
 {
@@ -19,7 +20,8 @@ class PembayaranController extends Controller
     {
         // Pastikan user sudah login
         if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+            Alert::error('Gagal!', 'Silakan login terlebih dahulu.');
+        return redirect()->route('login');
         }
 
         // Ambil pesanan dengan relasi layanan
@@ -28,12 +30,14 @@ class PembayaranController extends Controller
                           ->first();
 
         if (!$pesanan) {
-            return redirect()->route('pesanan.riwayat')->with('error', 'Pesanan tidak ditemukan.');
+            Alert::error('Gagal!', 'Pesanan tidak ditemukan.');
+            return redirect()->route('pesanan.riwayat');
         }
 
         // Pastikan pesanan dalam status menunggu pembayaran
         if ($pesanan->status !== 'menunggu_pembayaran') {
-            return redirect()->route('pesanan.riwayat')->with('error', 'Pesanan tidak dalam status menunggu pembayaran.');
+            Alert::error('Gagal!', 'Pesanan tidak dalam status menunggu pembayaran.');
+            return redirect()->route('pesanan.riwayat');
         }
 
         // Hitung total harga jika belum ada
@@ -62,7 +66,8 @@ class PembayaranController extends Controller
                           ->first();
 
         if (!$pesanan || $pesanan->status !== 'menunggu_pembayaran') {
-            return back()->with('error', 'Pesanan tidak valid atau tidak dalam status menunggu pembayaran.');
+            Alert::error('Gagal!', 'Pesanan tidak valid atau tidak dalam status menunggu pembayaran.');
+            return back();
         }
 
         try {
@@ -88,11 +93,12 @@ class PembayaranController extends Controller
             // Update status pesanan
             $pesanan->update(['status' => 'menunggu_verifikasi']);
 
-            return redirect()->route('pesanan.riwayat')
-                           ->with('success', 'Bukti pembayaran berhasil diupload. Pembayaran sedang ditinjau oleh admin.');
+            Alert::success('Berhasil!', 'Bukti pembayaran berhasil diupload. Pembayaran sedang ditinjau oleh admin.');
+            return redirect()->route('pesanan.riwayat');
 
         } catch (\Exception $e) {
-            return back()->with('error', 'Terjadi kesalahan saat mengupload bukti pembayaran. Silakan coba lagi.');
+            Alert::error('Gagal!', 'Terjadi kesalahan saat mengupload bukti pembayaran. Silakan coba lagi.');
+            return back();
         }
     }
 
@@ -103,7 +109,8 @@ class PembayaranController extends Controller
     {
         // Pastikan user sudah login
         if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+            Alert::error('Gagal!', 'Silakan login terlebih dahulu.');
+            return redirect()->route('login');
         }
 
         // Ambil pesanan dengan relasi pembayaran
@@ -113,12 +120,14 @@ class PembayaranController extends Controller
                           ->first();
 
         if (!$pesanan || !$pesanan->pembayaran) {
-            return redirect()->route('pesanan.riwayat')->with('error', 'Pesanan atau data pembayaran tidak ditemukan.');
+            Alert::error('Gagal!', 'Pesanan atau data pembayaran tidak ditemukan.');
+            return redirect()->route('pesanan.riwayat');
         }
 
         // Pastikan pembayaran ditolak
         if ($pesanan->pembayaran->status_pembayaran !== 'ditolak') {
-            return redirect()->route('pesanan.riwayat')->with('error', 'Pembayaran tidak dalam status ditolak.');
+            Alert::error('Gagal!', 'Pembayaran tidak dalam status ditolak.');
+            return redirect()->route('pesanan.riwayat');
         }
 
         return view('frontend.pembayaran.upload-ulang', compact('pesanan'));
@@ -141,7 +150,8 @@ class PembayaranController extends Controller
                           ->first();
 
         if (!$pesanan || !$pesanan->pembayaran || $pesanan->pembayaran->status_pembayaran !== 'ditolak') {
-            return back()->with('error', 'Pesanan tidak valid atau pembayaran tidak dalam status ditolak.');
+            Alert::error('Gagal!', 'Pesanan tidak valid atau pembayaran tidak dalam status ditolak.');
+            return back();
         }
 
         try {
@@ -164,11 +174,12 @@ class PembayaranController extends Controller
             // Update status pesanan
             $pesanan->update(['status' => 'menunggu_verifikasi']);
 
-            return redirect()->route('pesanan.riwayat')
-                           ->with('success', 'Bukti pembayaran berhasil diupload ulang. Pembayaran sedang ditinjau oleh admin.');
+            Alert::success('Berhasil!', 'Bukti pembayaran berhasil diupload ulang. Pembayaran sedang ditinjau oleh admin.');
+            return redirect()->route('pesanan.riwayat');
 
         } catch (\Exception $e) {
-            return back()->with('error', 'Terjadi kesalahan saat mengupload bukti pembayaran. Silakan coba lagi.');
+            Alert::error('Gagal!', 'Terjadi kesalahan saat mengupload bukti pembayaran. Silakan coba lagi.');
+            return back();
         }
     }
 }
