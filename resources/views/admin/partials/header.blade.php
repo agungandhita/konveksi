@@ -31,7 +31,7 @@
                     <span class="text-sm font-medium text-slate-700 hidden sm:block">Admin</span>
                     <i class="fas fa-chevron-down text-xs text-slate-500 hidden sm:block"></i>
                 </button>
-                
+
                 <!-- Profile Dropdown Menu -->
                 <div id="profile-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-slate-200 hidden">
                     <div class="py-2">
@@ -44,10 +44,13 @@
                             Pengaturan
                         </a>
                         <hr class="my-2 border-slate-200">
-                        <a href="#" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                            <i class="fas fa-sign-out-alt mr-3 text-red-400"></i>
-                            Logout
-                        </a>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                <i class="fas fa-sign-out-alt mr-3 text-red-400"></i>
+                                Logout
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>

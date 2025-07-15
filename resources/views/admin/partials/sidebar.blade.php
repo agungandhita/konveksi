@@ -14,44 +14,61 @@
     <nav class="mt-6 px-4">
         <ul class="space-y-2">
             <li>
-                <a href="#" class="flex items-center px-3 py-2 text-sm font-medium text-blue-700 bg-blue-50 rounded-lg border-r-2 border-blue-500">
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.dashboard') ? 'text-blue-700 bg-blue-50 border-r-2 border-blue-500' : 'text-slate-700 hover:bg-blue-50 hover:text-blue-700' }}">
                     <i class="fas fa-home mr-3"></i>
                     Dashboard
                 </a>
             </li>
             <li>
-                <a href="#" class="flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-blue-50 hover:text-blue-700">
+                <a href="{{ route('admin.pesanan.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.pesanan.*') ? 'text-blue-700 bg-blue-50 border-r-2 border-blue-500' : 'text-slate-700 hover:bg-blue-50 hover:text-blue-700' }}">
                     <i class="fas fa-shopping-cart mr-3"></i>
                     Pesanan
-                    <span class="ml-auto bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">5</span>
+                    @php
+                        $pendingCount = \App\Models\Pesanan::where('status', 'pending')->count();
+                    @endphp
+                    @if($pendingCount > 0)
+                        <span class="ml-auto bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">{{ $pendingCount }}</span>
+                    @endif
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.produk.index') }}" class="flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-blue-50 hover:text-blue-700">
+                <a href="{{ route('admin.pembayaran.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.pembayaran.*') ? 'text-blue-700 bg-blue-50 border-r-2 border-blue-500' : 'text-slate-700 hover:bg-blue-50 hover:text-blue-700' }}">
+                    <i class="fas fa-credit-card mr-3"></i>
+                    Pembayaran
+                    @php
+                        $pembayaranMenunggu = \App\Models\Pembayaran::whereIn('status_pembayaran', ['menunggu', 'ditinjau'])->count();
+                    @endphp
+                    @if($pembayaranMenunggu > 0)
+                        <span class="ml-auto bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded-full">{{ $pembayaranMenunggu }}</span>
+                    @endif
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.produk.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.produk.*') ? 'text-blue-700 bg-blue-50 border-r-2 border-blue-500' : 'text-slate-700 hover:bg-blue-50 hover:text-blue-700' }}">
                     <i class="fas fa-box mr-3"></i>
                     Produk
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.layanan.index') }}" class="flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-blue-50 hover:text-blue-700">
+                <a href="{{ route('admin.layanan.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.layanan.*') ? 'text-blue-700 bg-blue-50 border-r-2 border-blue-500' : 'text-slate-700 hover:bg-blue-50 hover:text-blue-700' }}">
                     <i class="fas fa-concierge-bell mr-3"></i>
                     Layanan
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.portofolio.index') }}" class="flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-blue-50 hover:text-blue-700">
+                <a href="{{ route('admin.portofolio.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.portofolio.*') ? 'text-blue-700 bg-blue-50 border-r-2 border-blue-500' : 'text-slate-700 hover:bg-blue-50 hover:text-blue-700' }}">
                     <i class="fas fa-images mr-3"></i>
                     Kelola Portofolio
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.users.index') }}" class="flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-blue-50 hover:text-blue-700">
+                <a href="{{ route('admin.users.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.users.*') ? 'text-blue-700 bg-blue-50 border-r-2 border-blue-500' : 'text-slate-700 hover:bg-blue-50 hover:text-blue-700' }}">
                     <i class="fas fa-users mr-3"></i>
                     Pengguna
                 </a>
             </li>
             <li>
-                <a href="#" class="flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-blue-50 hover:text-blue-700">
+                <a href="#" class="flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.laporan.*') ? 'text-blue-700 bg-blue-50 border-r-2 border-blue-500' : 'text-slate-700 hover:bg-blue-50 hover:text-blue-700' }}">
                     <i class="fas fa-chart-bar mr-3"></i>
                     Laporan
                 </a>
@@ -64,13 +81,13 @@
             <h3 class="px-3 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Pengaturan</h3>
             <ul class="space-y-2">
                 <li>
-                    <a href="#" class="flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-blue-50 hover:text-blue-700">
+                    <a href="#" class="flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.konfigurasi.*') ? 'text-blue-700 bg-blue-50 border-r-2 border-blue-500' : 'text-slate-700 hover:bg-blue-50 hover:text-blue-700' }}">
                         <i class="fas fa-cog mr-3"></i>
                         Konfigurasi
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center px-3 py-2 text-sm font-medium text-slate-700 rounded-lg hover:bg-blue-50 hover:text-blue-700">
+                    <a href="#" class="flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.profile.*') ? 'text-blue-700 bg-blue-50 border-r-2 border-blue-500' : 'text-slate-700 hover:bg-blue-50 hover:text-blue-700' }}">
                         <i class="fas fa-user-circle mr-3"></i>
                         Profile
                     </a>

@@ -1,0 +1,21 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#f8f9fa"/>
+  <rect x="1" y="1" width="398" height="298" stroke="#dee2e6" stroke-width="2" stroke-dasharray="8,8"/>
+  
+  <!-- Camera Icon -->
+  <g transform="translate(175, 125)">
+    <rect x="0" y="15" width="50" height="35" rx="5" fill="#6c757d"/>
+    <rect x="5" y="10" width="40" height="5" rx="2.5" fill="#6c757d"/>
+    <circle cx="25" cy="32.5" r="12" fill="#f8f9fa"/>
+    <circle cx="25" cy="32.5" r="8" fill="#6c757d"/>
+    <circle cx="40" cy="22" r="2" fill="#f8f9fa"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="200" y="180" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="14" font-weight="500">
+    Foto Produk
+  </text>
+  <text x="200" y="200" text-anchor="middle" fill="#adb5bd" font-family="Arial, sans-serif" font-size="12">
+    Tidak Tersedia
+  </text>
+</svg>

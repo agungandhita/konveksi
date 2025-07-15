@@ -38,7 +38,7 @@ class LoginController extends Controller
                 return redirect()->route('admin.dashboard')->with('success', 'Login berhasil! Selamat datang di dashboard admin.');
             }
 
-            return redirect()->intended('/dashboard')->with('success', 'Login berhasil! Selamat datang.');
+            return redirect()->intended('/')->with('success', 'Login berhasil! Selamat datang.');
         }
 
         return back()->withErrors([

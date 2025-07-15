@@ -43,7 +43,7 @@ class Produk extends Model
         if ($this->foto_produk && Storage::disk('public')->exists($this->foto_produk)) {
             return Storage::url($this->foto_produk);
         }
-        return asset('img/no-image.png'); // Default image jika tidak ada foto
+        return asset('img/no-image.svg'); // Default image jika tidak ada foto
     }
 
     // Accessor untuk thumbnail foto
