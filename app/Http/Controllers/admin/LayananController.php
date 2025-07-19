@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Layanan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Models\LayananHargaUkuran;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Validator;
 
 class LayananController extends Controller
 {
@@ -115,7 +117,9 @@ class LayananController extends Controller
             'minimal_order' => 'required|integer|min:1',
             'satuan_order' => 'required|string|max:50',
             'perkiraan_harga' => 'nullable|numeric|min:0',
-            'status' => 'required|in:aktif,non-aktif'
+            'status' => 'required|in:aktif,non-aktif',
+            'harga_ukuran' => 'nullable|array',
+            'harga_ukuran.*' => 'nullable|numeric|min:0'
         ], [
             'nama_layanan.required' => 'Nama layanan wajib diisi.',
             'nama_layanan.unique' => 'Nama layanan sudah ada.',
@@ -125,7 +129,8 @@ class LayananController extends Controller
             'minimal_order.min' => 'Minimal order harus lebih dari 0.',
             'satuan_order.required' => 'Satuan order wajib diisi.',
             'perkiraan_harga.numeric' => 'Harga harus berupa angka.',
-            'status.required' => 'Status wajib dipilih.'
+            'status.required' => 'Status wajib dipilih.',
+            'harga_ukuran.*.numeric' => 'Harga ukuran harus berupa angka.'
         ]);
 
         if ($validator->fails()) {
@@ -135,10 +140,35 @@ class LayananController extends Controller
         }
 
         try {
-            $layanan->update($request->all());
+            DB::beginTransaction();
+
+            // Update layanan
+            $layanan->update($request->only([
+                'nama_layanan', 'deskripsi_singkat', 'estimasi_waktu',
+                'minimal_order', 'satuan_order', 'perkiraan_harga', 'status'
+            ]));
+
+            // Hapus harga ukuran yang lama
+            $layanan->hargaUkuran()->delete();
+
+            // Simpan harga berdasarkan ukuran yang baru
+            if ($request->filled('harga_ukuran')) {
+                foreach ($request->harga_ukuran as $ukuran => $harga) {
+                    if (!empty($harga)) {
+                        LayananHargaUkuran::create([
+                            'layanan_id' => $layanan->id,
+                            'ukuran' => $ukuran,
+                            'harga' => $harga
+                        ]);
+                    }
+                }
+            }
+
+            DB::commit();
             Alert::success('Berhasil!', 'Layanan berhasil diperbarui.');
             return redirect()->route('admin.layanan.index');
         } catch (\Exception $e) {
+            DB::rollback();
             Alert::error('Gagal!', 'Terjadi kesalahan saat memperbarui layanan.');
             return redirect()->back()->withInput();
         }

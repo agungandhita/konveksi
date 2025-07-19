@@ -146,7 +146,7 @@
 
                         <!-- Perkiraan Harga -->
                         <div class="mb-6">
-                            <label for="perkiraan_harga" class="block text-sm font-medium text-gray-700 mb-2">Perkiraan Harga</label>
+                            <label for="perkiraan_harga" class="block text-sm font-medium text-gray-700 mb-2">Perkiraan Harga (Default)</label>
                             <div class="flex">
                                 <span class="px-3 py-2 bg-gray-50 border border-r-0 border-gray-300 rounded-l-md text-gray-500">Rp</span>
                                 <input type="number" class="flex-1 px-3 py-2 border border-gray-300 rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('perkiraan_harga') border-red-500 @enderror"
@@ -154,10 +154,36 @@
                                        value="{{ old('perkiraan_harga', $layanan->perkiraan_harga) }}"
                                        min="0" step="1000" placeholder="50000">
                             </div>
-                            <div class="text-gray-500 text-sm mt-1">Kosongkan jika harga akan ditentukan berdasarkan konsultasi</div>
+                            <div class="text-gray-500 text-sm mt-1">Harga default jika tidak ada harga khusus per ukuran</div>
                             @error('perkiraan_harga')
                                 <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
                             @enderror
+                        </div>
+
+                        <!-- Harga Berdasarkan Ukuran -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-3">Harga Berdasarkan Ukuran (Opsional)</label>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <div class="text-sm text-gray-600 mb-3">Atur harga khusus untuk setiap ukuran. Kosongkan jika menggunakan harga default.</div>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                    @foreach($ukuranOptions as $key => $label)
+                                    <div>
+                                        <label for="harga_{{ $key }}" class="block text-xs font-medium text-gray-600 mb-1">{{ $label }}</label>
+                                        <div class="flex">
+                                            <span class="px-2 py-1 bg-white border border-r-0 border-gray-300 rounded-l text-xs text-gray-500">Rp</span>
+                                            <input type="number" 
+                                                   class="flex-1 px-2 py-1 text-sm border border-gray-300 rounded-r focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+                                                   id="harga_{{ $key }}" 
+                                                   name="harga_ukuran[{{ $key }}]"
+                                                   value="{{ old('harga_ukuran.' . $key, $hargaUkuran[$key] ?? '') }}"
+                                                   min="0" 
+                                                   step="1000" 
+                                                   placeholder="{{ $key == 'Custom' ? '75000' : (50000 + (array_search($key, array_keys($ukuranOptions)) * 5000)) }}">
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Submit Buttons -->

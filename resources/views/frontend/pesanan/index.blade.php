@@ -48,7 +48,7 @@
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent">
                         <option value="">Pilih Layanan</option>
                         @foreach($layanan as $item)
-                            <option value="{{ $item->id }}" {{ old('layanan_id') == $item->id ? 'selected' : '' }}>
+                            <option value="{{ $item->id }}" {{ old('layanan_id') == $item->id ? 'selected' : '' }} data-harga="{{ $item->perkiraan_harga }}">
                                 {{ $item->nama_layanan }} - {{ $item->formatted_harga }}
                             </option>
                         @endforeach
@@ -106,16 +106,27 @@
                     <select name="ukuran_baju" id="ukuran_baju" required
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent">
                         <option value="">Pilih Ukuran</option>
-                        <option value="S" {{ old('ukuran_baju') == 'S' ? 'selected' : '' }}>S</option>
-                        <option value="M" {{ old('ukuran_baju') == 'M' ? 'selected' : '' }}>M</option>
-                        <option value="L" {{ old('ukuran_baju') == 'L' ? 'selected' : '' }}>L</option>
-                        <option value="XL" {{ old('ukuran_baju') == 'XL' ? 'selected' : '' }}>XL</option>
-                        <option value="XXL" {{ old('ukuran_baju') == 'XXL' ? 'selected' : '' }}>XXL</option>
-                        <option value="Custom" {{ old('ukuran_baju') == 'Custom' ? 'selected' : '' }}>Custom</option>
+                        @foreach($ukuranOptions as $ukuran)
+                            <option value="{{ $ukuran }}" {{ old('ukuran_baju') == $ukuran ? 'selected' : '' }}>{{ $ukuran }}</option>
+                        @endforeach
                     </select>
                     @error('ukuran_baju')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
+                </div>
+
+                <!-- Harga Display -->
+                <div id="harga_display" class="hidden">
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium text-blue-800">Harga per unit:</span>
+                            <span id="harga_per_unit" class="text-lg font-bold text-blue-900">-</span>
+                        </div>
+                        <div class="flex items-center justify-between mt-2">
+                            <span class="text-sm font-medium text-blue-800">Total estimasi:</span>
+                            <span id="total_estimasi" class="text-lg font-bold text-blue-900">-</span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Ukuran Custom (Hidden by default) -->
@@ -382,6 +393,68 @@ document.addEventListener('DOMContentLoaded', function() {
             field.addEventListener('input', validateForm);
         }
     });
+
+    // Update harga berdasarkan layanan dan ukuran
+    function updateHarga() {
+        const layananSelect = document.getElementById('layanan_id');
+        const ukuranSelect = document.getElementById('ukuran_baju');
+        const jumlahInput = document.getElementById('jumlah_order');
+        const hargaDisplay = document.getElementById('harga_display');
+        const hargaPerUnit = document.getElementById('harga_per_unit');
+        const totalEstimasi = document.getElementById('total_estimasi');
+
+        if (layananSelect.value && ukuranSelect.value) {
+            // Ambil harga dari API
+            fetch('/api/pesanan/harga-ukuran', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    layanan_id: layananSelect.value,
+                    ukuran: ukuranSelect.value
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const harga = data.harga;
+                    const jumlah = parseInt(jumlahInput.value) || 1;
+                    const total = harga * jumlah;
+
+                    hargaPerUnit.textContent = 'Rp ' + harga.toLocaleString('id-ID');
+                    totalEstimasi.textContent = 'Rp ' + total.toLocaleString('id-ID');
+                    hargaDisplay.classList.remove('hidden');
+                } else {
+                    // Fallback ke harga default
+                    const selectedOption = layananSelect.options[layananSelect.selectedIndex];
+                    const defaultHarga = parseInt(selectedOption.dataset.harga) || 0;
+                    const jumlah = parseInt(jumlahInput.value) || 1;
+                    const total = defaultHarga * jumlah;
+
+                    if (defaultHarga > 0) {
+                        hargaPerUnit.textContent = 'Rp ' + defaultHarga.toLocaleString('id-ID');
+                        totalEstimasi.textContent = 'Rp ' + total.toLocaleString('id-ID');
+                        hargaDisplay.classList.remove('hidden');
+                    } else {
+                        hargaDisplay.classList.add('hidden');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                hargaDisplay.classList.add('hidden');
+            });
+        } else {
+            hargaDisplay.classList.add('hidden');
+        }
+    }
+
+    // Event listeners untuk update harga
+    document.getElementById('layanan_id').addEventListener('change', updateHarga);
+    document.getElementById('ukuran_baju').addEventListener('change', updateHarga);
+    document.getElementById('jumlah_order').addEventListener('input', updateHarga);
 
     // Initial validation
     validateForm();

@@ -129,7 +129,9 @@ class Pesanan extends Model
      */
     public function calculateTotalPrice()
     {
-        $hargaLayanan = $this->layanan->perkiraan_harga * $this->jumlah_order;
+        // Dapatkan harga berdasarkan ukuran, jika tidak ada gunakan harga default
+        $hargaPerPcs = $this->layanan->getHargaByUkuran($this->ukuran_baju);
+        $hargaLayanan = $hargaPerPcs * $this->jumlah_order;
         $hargaBordir = $this->tambahan_bordir ? 15000 * $this->jumlah_order : 0; // Rp 15.000 per pcs untuk bordir
         
         return $hargaLayanan + $hargaBordir;

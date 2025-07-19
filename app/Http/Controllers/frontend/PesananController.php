@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Layanan;
+use App\Models\LayananHargaUkuran;
 use App\Models\Pesanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,10 +24,13 @@ class PesananController extends Controller
             return redirect()->route('login')->with('message', 'Silakan login terlebih dahulu untuk melakukan pemesanan.');
         }
 
-        // Ambil semua layanan aktif untuk dropdown
-        $layanan = Layanan::aktif()->orderBy('nama_layanan', 'asc')->get();
+        // Ambil semua layanan aktif untuk dropdown dengan harga ukuran
+        $layanan = Layanan::with('hargaUkuran')->aktif()->orderBy('nama_layanan', 'asc')->get();
+        
+        // Ambil opsi ukuran
+        $ukuranOptions = LayananHargaUkuran::getUkuranOptions();
 
-        return view('frontend.pesanan.index', compact('layanan'));
+        return view('frontend.pesanan.index', compact('layanan', 'ukuranOptions'));
     }
 
     /**
@@ -179,5 +183,25 @@ class PesananController extends Controller
         }
 
         return view('frontend.pesanan.detail', compact('pesanan'));
+    }
+
+    /**
+     * API untuk mendapatkan harga berdasarkan layanan dan ukuran
+     */
+    public function getHargaByUkuran(Request $request)
+    {
+        $request->validate([
+            'layanan_id' => 'required|exists:layanan,id',
+            'ukuran' => 'required|in:S,M,L,XL,XXL,Custom'
+        ]);
+
+        $layanan = Layanan::findOrFail($request->layanan_id);
+        $harga = $layanan->getHargaByUkuran($request->ukuran);
+
+        return response()->json([
+            'success' => true,
+            'harga' => $harga,
+            'formatted_harga' => 'Rp ' . number_format($harga, 0, ',', '.')
+        ]);
     }
 }

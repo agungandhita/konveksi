@@ -50,4 +50,23 @@ class Layanan extends Model
     {
         return $this->minimal_order . ' ' . $this->satuan_order;
     }
+
+    // Relasi ke harga ukuran
+    public function hargaUkuran()
+    {
+        return $this->hasMany(LayananHargaUkuran::class);
+    }
+
+    // Method untuk mendapatkan harga berdasarkan ukuran
+    public function getHargaByUkuran($ukuran)
+    {
+        $hargaUkuran = $this->hargaUkuran()->where('ukuran', $ukuran)->first();
+        return $hargaUkuran ? $hargaUkuran->harga : $this->perkiraan_harga;
+    }
+
+    // Method untuk mendapatkan semua harga ukuran dalam format array
+    public function getAllHargaUkuran()
+    {
+        return $this->hargaUkuran()->pluck('harga', 'ukuran')->toArray();
+    }
 }

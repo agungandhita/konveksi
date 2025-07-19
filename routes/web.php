@@ -52,10 +52,11 @@ Route::post('/chatbot/clear-history', [ChatbotController::class, 'clearChatHisto
 // Pesanan Routes (Protected)
 Route::middleware('auth')->group(function () {
     Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan.index');
-    Route::post('/pesanan', [PesananController::class, 'store'])->name('pesanan.store');
-    Route::get('/pesanan/success/{id}', [PesananController::class, 'success'])->name('pesanan.success');
-    Route::get('/pesanan/riwayat', [PesananController::class, 'riwayat'])->name('pesanan.riwayat');
-    Route::get('/pesanan/{id}', [PesananController::class, 'show'])->name('pesanan.show');
+Route::post('/pesanan', [PesananController::class, 'store'])->name('pesanan.store');
+Route::get('/pesanan/success/{id}', [PesananController::class, 'success'])->name('pesanan.success');
+Route::get('/pesanan/riwayat', [PesananController::class, 'riwayat'])->name('pesanan.riwayat');
+Route::get('/pesanan/{id}', [PesananController::class, 'show'])->name('pesanan.show');
+Route::post('/api/pesanan/harga-ukuran', [PesananController::class, 'getHargaByUkuran'])->name('api.pesanan.harga-ukuran');
 
     // Payment Routes
     Route::get('/pembayaran/{pesanan}', [App\Http\Controllers\frontend\PembayaranController::class, 'index'])->name('pembayaran.index');
