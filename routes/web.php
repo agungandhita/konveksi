@@ -45,7 +45,7 @@ Route::get('/tentang-kami', [AboutController::class, 'index'])->name('about.inde
 Route::get('/kontak', [ContactController::class, 'index'])->name('contact.index');
 
 // Chatbot Routes
-Route::post('/chatbot/send-message', [ChatbotController::class, 'sendMessage'])->name('chatbot.send-message');
+Route::post('/chatbot/send-message', [ChatbotController::class, 'chat'])->name('chatbot.send-message');
 Route::get('/chatbot/history', [ChatbotController::class, 'getChatHistory'])->name('chatbot.history');
 Route::post('/chatbot/clear-history', [ChatbotController::class, 'clearChatHistory'])->name('chatbot.clear-history');
 

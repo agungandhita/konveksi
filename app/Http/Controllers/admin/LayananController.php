@@ -45,7 +45,8 @@ class LayananController extends Controller
      */
     public function create()
     {
-        return view('admin.layanan.create');
+        $ukuranOptions = LayananHargaUkuran::getUkuranOptions();
+        return view('admin.layanan.create', compact('ukuranOptions'));
     }
 
     /**

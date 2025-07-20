@@ -477,145 +477,174 @@
  }
 </style>
 
+<!-- Old chatbot script removed -->
+
+<!-- Chatbot Widget -->
+<div id="chatbot-widget" class="fixed bottom-6 right-6 z-50">
+    <!-- Chatbot Toggle Button -->
+    <button id="chatbot-toggle" class="bg-slate-700 hover:bg-slate-800 text-white rounded-full p-4 shadow-lg transition-all duration-300 transform hover:scale-110">
+        <svg id="chat-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+        </svg>
+        <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+    </button>
+    
+    <!-- Chatbot Window -->
+    <div id="chatbot-window" class="hidden absolute bottom-16 right-0 w-80 h-96 bg-white rounded-lg shadow-2xl border border-gray-200 flex flex-col">
+        <!-- Header -->
+        <div class="bg-slate-700 text-white p-4 rounded-t-lg">
+            <h3 class="font-semibold">Asisten Virtual Konveksi Surabaya</h3>
+            <p class="text-sm text-slate-200">Tanya apa saja tentang layanan kami!</p>
+        </div>
+        
+        <!-- Chat Messages -->
+        <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3">
+            <div class="flex items-start space-x-2">
+                <div class="w-8 h-8 bg-slate-700 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                    CS
+                </div>
+                <div class="bg-gray-100 rounded-lg p-3 max-w-xs">
+                    <p class="text-sm">Halo! Saya asisten virtual Konveksi Surabaya. Ada yang bisa saya bantu?</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Input Area -->
+        <div class="p-4 border-t border-gray-200">
+            <div class="flex space-x-2">
+                <input type="text" id="chat-input" placeholder="Ketik pesan Anda..." class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent">
+                <button id="send-message" class="bg-slate-700 hover:bg-slate-800 text-white rounded-lg px-4 py-2 text-sm transition-colors">
+                    <svg id="send-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                    <svg id="loading-icon" class="w-4 h-4 animate-spin hidden" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-const chatForm = document.getElementById('chatForm');
-const messageInput = document.getElementById('messageInput');
-const chatMessages = document.getElementById('chatMessages');
-const typingIndicator = document.getElementById('typingIndicator');
-const chatbotPopup = document.getElementById('chatbotPopup');
-const chatbotToggle = document.getElementById('chatbotToggle');
-const sendButton = document.getElementById('sendButton');
-const sendIcon = document.getElementById('sendIcon');
-const loadingIcon = document.getElementById('loadingIcon');
+// Consolidated Chatbot functionality
+const chatbotToggle = document.getElementById('chatbot-toggle');
+const chatbotWindow = document.getElementById('chatbot-window');
+const chatIcon = document.getElementById('chat-icon');
+const closeIcon = document.getElementById('close-icon');
+const chatInput = document.getElementById('chat-input');
+const sendButton = document.getElementById('send-message');
+const chatMessages = document.getElementById('chat-messages');
+const sendIcon = document.getElementById('send-icon');
+const loadingIcon = document.getElementById('loading-icon');
 
-function toggleChatbot() {
-    if (chatbotPopup.classList.contains('hidden')) {
-        chatbotPopup.classList.remove('hidden');
-        chatbotToggle.style.display = 'none';
-        focusMessageInput();
+// Toggle chatbot window
+chatbotToggle.addEventListener('click', function() {
+    const isHidden = chatbotWindow.classList.contains('hidden');
+    
+    if (isHidden) {
+        chatbotWindow.classList.remove('hidden');
+        chatIcon.classList.add('hidden');
+        closeIcon.classList.remove('hidden');
     } else {
-        chatbotPopup.classList.add('hidden');
-        chatbotToggle.style.display = 'block';
-    }
-}
-
-function closeChatbot() {
-    chatbotPopup.classList.add('hidden');
-    chatbotToggle.style.display = 'block';
-}
-
-chatForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    sendMessage();
-});
-
-// Handle Enter key in message input
-messageInput.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
+        chatbotWindow.classList.add('hidden');
+        chatIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
     }
 });
 
-// Auto-focus on input when chatbot opens
-function focusMessageInput() {
-    setTimeout(() => {
-        messageInput.focus();
-    }, 100);
-}
-
-async function sendMessage() {
-    const message = messageInput.value.trim();
+// Send message function
+function sendMessage() {
+    const message = chatInput.value.trim();
+    if (!message) return;
     
-    if (!message) {
-        return;
-    }
+    // Add user message to chat
+    addMessageToChat(message, 'user');
     
-    // Clear initial welcome message if this is the first user message
-    const existingMessages = chatMessages.querySelectorAll('.message');
-    if (existingMessages.length === 0) {
-        const initialMessage = chatMessages.querySelector('div:not(.message)');
-        if (initialMessage) {
-            initialMessage.remove();
-        }
-    }
+    // Clear input and show loading
+    chatInput.value = '';
+    setLoading(true);
     
-    // Add user message
-    addMessage(message, 'user');
-    
-    // Clear input
-    messageInput.value = '';
-    
-    // Show typing indicator and loading state
-    showTypingIndicator();
-    setLoadingState(true);
-    
-    try {
-        const response = await fetch('/chatbot/send-message', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken
-            },
-            body: JSON.stringify({ message: message })
-        });
-        
-        const data = await response.json();
-        
-        // Hide typing indicator and loading state
-        hideTypingIndicator();
-        setLoadingState(false);
-        
-        if (response.ok && data.success) {
-            addMessage(data.message, 'bot');
+    // Send to backend
+    fetch('/chatbot/send-message', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ message: message })
+    })
+    .then(response => response.json())
+    .then(data => {
+        setLoading(false);
+        if (data.success) {
+            addMessageToChat(data.message, 'bot');
         } else {
-            addMessage('Maaf, terjadi kesalahan: ' + (data.error || 'Silakan coba lagi.'), 'error');
+            addMessageToChat('Maaf, terjadi kesalahan. Silakan coba lagi.', 'bot');
         }
-        
-    } catch (error) {
-        hideTypingIndicator();
-        setLoadingState(false);
-        addMessage('Maaf, terjadi kesalahan koneksi. Silakan coba lagi.', 'error');
+    })
+    .catch(error => {
+        setLoading(false);
+        addMessageToChat('Maaf, terjadi kesalahan koneksi. Silakan coba lagi.', 'bot');
         console.error('Error:', error);
-    }
+    });
 }
 
-function addMessage(text, sender) {
+// Add message to chat
+function addMessageToChat(message, sender) {
     const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${sender}`;
+    messageDiv.className = 'flex items-start space-x-2';
     
-    const content = document.createElement('div');
-    content.className = 'message-content';
-    content.textContent = text;
+    if (sender === 'user') {
+        messageDiv.className += ' justify-end';
+        messageDiv.innerHTML = `
+            <div class="bg-slate-700 text-white rounded-lg p-3 max-w-xs">
+                <p class="text-sm">${message}</p>
+            </div>
+            <div class="w-8 h-8 bg-slate-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                U
+            </div>
+        `;
+    } else {
+        messageDiv.innerHTML = `
+            <div class="w-8 h-8 bg-slate-700 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                CS
+            </div>
+            <div class="bg-gray-100 rounded-lg p-3 max-w-xs">
+                <p class="text-sm">${message}</p>
+            </div>
+        `;
+    }
     
-    messageDiv.appendChild(content);
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-function showTypingIndicator() {
-    typingIndicator.classList.remove('hidden');
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-function hideTypingIndicator() {
-    typingIndicator.classList.add('hidden');
-}
-
-function setLoadingState(isLoading) {
-    if (isLoading) {
+// Set loading state
+function setLoading(loading) {
+    if (loading) {
         sendButton.disabled = true;
-        messageInput.disabled = true;
+        chatInput.disabled = true;
         sendIcon.classList.add('hidden');
         loadingIcon.classList.remove('hidden');
     } else {
         sendButton.disabled = false;
-        messageInput.disabled = false;
+        chatInput.disabled = false;
         sendIcon.classList.remove('hidden');
         loadingIcon.classList.add('hidden');
     }
 }
+
+// Event listeners
+sendButton.addEventListener('click', sendMessage);
+chatInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        sendMessage();
+    }
+});
 </script>
 
 @endsection

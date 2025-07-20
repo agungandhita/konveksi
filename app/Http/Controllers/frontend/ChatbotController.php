@@ -2,78 +2,65 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use App\Services\GeminiChatService;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Http;
+use App\Services\ManualChatbotService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ChatbotController extends Controller
 {
-    protected $gemini;
+    protected $chatbotService;
 
-    public function __construct(GeminiChatService $gemini)
+    public function __construct(ManualChatbotService $chatbotService)
     {
-        $this->gemini = $gemini;
+        $this->chatbotService = $chatbotService;
     }
 
-    public function send(Request $request)
-    {
-        $request->validate([
-            'message' => 'required|string',
-        ]);
-
-        $reply = $this->gemini->chat($request->message);
-
-        return response()->json([
-            'reply' => $reply,
-        ]);
-    }
-
-    public function sendMessage(Request $request)
+    public function chat(Request $request)
     {
         try {
-            $request->validate([
-                'message' => 'required|string|max:1000',
-            ]);
-
             $message = $request->input('message');
             
-            // Add context about the business
-            $contextualMessage = "Anda adalah asisten virtual untuk Konveksi Surabaya, sebuah jasa konveksi terpercaya yang melayani pembuatan seragam berkualitas tinggi untuk instansi, perusahaan, sekolah, dan mahasiswa dengan pengalaman puluhan tahun. Layanan kami meliputi: Seragam Instansi, Seragam Perusahaan, Seragam Sekolah, Seragam Mahasiswa, Kaos Custom, dan Konsultasi Gratis. Kami memiliki 15+ tahun pengalaman, 500+ klien puas, dan layanan 24 jam. Jawab pertanyaan berikut dengan ramah dan informatif: " . $message;
-            
-            $reply = $this->gemini->chat($contextualMessage);
+            if (empty($message)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pesan tidak boleh kosong'
+                ], 400);
+            }
 
+            // Gunakan chatbot manual
+            $response = $this->chatbotService->getResponse($message);
+            
             return response()->json([
                 'success' => true,
-                'message' => $reply,
+                'message' => $response
             ]);
+            
         } catch (\Exception $e) {
-            Log::error('Chatbot error: ' . $e->getMessage());
+            Log::error('Chatbot Error: ' . $e->getMessage());
             
             return response()->json([
                 'success' => false,
-                'error' => 'Maaf, terjadi kesalahan. Silakan coba lagi.',
+                'message' => 'Maaf, terjadi kesalahan sistem. Silakan coba lagi.'
             ], 500);
         }
     }
 
     public function getChatHistory(Request $request)
     {
-        // For now, return empty history as we're not storing chat history
+        // Untuk sementara return empty array karena tidak ada sistem session/database untuk history
         return response()->json([
             'success' => true,
-            'history' => [],
+            'history' => []
         ]);
     }
 
     public function clearChatHistory(Request $request)
     {
-        // For now, just return success as we're not storing chat history
+        // Untuk sementara return success karena tidak ada sistem session/database untuk history
         return response()->json([
             'success' => true,
-            'message' => 'Riwayat chat berhasil dihapus.',
+            'message' => 'History berhasil dihapus'
         ]);
     }
 }
