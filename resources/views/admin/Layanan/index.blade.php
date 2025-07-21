@@ -53,7 +53,7 @@
     </div>
 
     <!-- Bulk Actions Form -->
-    <form id="bulkActionForm" method="POST" action="{{ route('admin.layanan.bulk-action') }}">
+    <form method="POST" id="bulkActionForm" action="{{ route('admin.layanan.bulk-action') }}">
         @csrf
         <input type="hidden" name="action" id="bulkAction">
 
@@ -123,11 +123,20 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        @if($item->status === 'aktif')
-                                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Aktif</span>
-                                        @else
-                                            <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Non-Aktif</span>
-                                        @endif
+                                        <div class="flex items-center space-x-2">
+                                            @if($item->status === 'aktif')
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Aktif</span>
+                                            @else
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Non-Aktif</span>
+                                            @endif
+                                            <form method="POST" action="{{ route('admin.layanan.toggle-status', $item) }}" class="inline">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="text-blue-600 hover:text-blue-900 text-xs" title="Toggle Status">
+                                                    <i class="fas fa-toggle-{{ $item->status === 'aktif' ? 'on' : 'off' }}"></i>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div class="flex space-x-1">

@@ -103,7 +103,8 @@ class LayananController extends Controller
      */
     public function edit(Layanan $layanan)
     {
-        return view('admin.layanan.edit', compact('layanan'));
+        $ukuranOptions = LayananHargaUkuran::getUkuranOptions();
+        return view('admin.layanan.edit', compact('layanan', 'ukuranOptions'));
     }
 
     /**

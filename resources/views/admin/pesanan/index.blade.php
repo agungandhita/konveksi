@@ -45,7 +45,7 @@
                 </div>
                 <div>
                     <label for="search" class="block text-sm font-medium text-slate-700 mb-2">Pencarian</label>
-                    <input type="text" name="search" id="search" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+                    <input type="text" name="search" id="search" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                            placeholder="Nama pemesan, nomor WA, email..." value="{{ request('search') }}">
                 </div>
                 <div class="flex items-end gap-2">
@@ -73,7 +73,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
             <div class="flex items-center justify-between">
                 <div>
@@ -85,7 +85,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
             <div class="flex items-center justify-between">
                 <div>
@@ -97,7 +97,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
             <div class="flex items-center justify-between">
                 <div>
@@ -195,15 +195,15 @@
                                     </td>
                                     <td class="py-4 px-4">
                                         <div class="flex items-center space-x-2">
-                                            <a href="{{ route('admin.pesanan.show', $item->id) }}" 
-                                               class="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                            <a href="{{ route('admin.pesanan.show', $item->id) }}"
+                                               class="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                title="Detail">
                                                 <i class="fas fa-eye"></i>
                                             </a>
                                             <div class="relative inline-block text-left">
-                                                <button type="button" 
-                                                        class="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-yellow-600 rounded-md hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 dropdown-toggle" 
-                                                        onclick="toggleDropdown(this)" 
+                                                <button type="button"
+                                                        class="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-yellow-600 rounded-md hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-yellow-500 dropdown-toggle"
+                                                        onclick="toggleDropdown(this)"
                                                         title="Update Status">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
@@ -222,7 +222,7 @@
                                                     @endforeach
                                                 </div>
                                             </div>
-                                            <form method="POST" action="{{ route('admin.pesanan.destroy', $item->id) }}" 
+                                            <form method="POST" action="{{ route('admin.pesanan.destroy', $item->id) }}"
                                                   class="inline-block" onsubmit="return confirm('Yakin ingin menghapus pesanan ini?')">
                                                 @csrf
                                                 @method('DELETE')
@@ -237,11 +237,11 @@
                         </tbody>
                     </table>
                 </div>
-                
+
                 <!-- Pagination -->
                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mt-6 px-6 py-4 bg-slate-50 border-t gap-4">
                     <div class="text-sm text-slate-600">
-                        Menampilkan {{ $pesanan->firstItem() }} - {{ $pesanan->lastItem() }} 
+                        Menampilkan {{ $pesanan->firstItem() }} - {{ $pesanan->lastItem() }}
                         dari {{ $pesanan->total() }} pesanan
                     </div>
                     <div class="pagination-wrapper">
@@ -282,13 +282,13 @@ document.addEventListener('DOMContentLoaded', function() {
             toggleBulkActions();
         });
     }
-    
+
     // Individual Checkboxes
     const itemCheckboxes = document.querySelectorAll('.item-checkbox');
     itemCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function() {
             toggleBulkActions();
-            
+
             // Update select all checkbox
             const totalCheckboxes = itemCheckboxes.length;
             const checkedCheckboxes = document.querySelectorAll('.item-checkbox:checked').length;
@@ -297,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
     // Bulk Delete
     const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
     if (bulkDeleteBtn) {
@@ -307,16 +307,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Bulk Action Dropdown
     const bulkActionDropdown = document.getElementById('bulkActionDropdown');
     const bulkActionMenu = document.getElementById('bulkActionMenu');
-    
+
     if (bulkActionDropdown && bulkActionMenu) {
         bulkActionDropdown.addEventListener('click', function() {
             bulkActionMenu.classList.toggle('hidden');
         });
-        
+
         // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
             if (!bulkActionDropdown.contains(event.target) && !bulkActionMenu.contains(event.target)) {
@@ -330,7 +330,7 @@ function toggleBulkActions() {
     const checkedItems = document.querySelectorAll('.item-checkbox:checked').length;
     const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
     const bulkActionDropdown = document.getElementById('bulkActionDropdown');
-    
+
     if (checkedItems > 0) {
         if (bulkDeleteBtn) bulkDeleteBtn.classList.remove('hidden');
         if (bulkActionDropdown) bulkActionDropdown.classList.remove('hidden');
@@ -348,7 +348,7 @@ function bulkUpdateStatus(status) {
         }
         submitBulkAction('update_status');
     }
-    
+
     // Close dropdown
     const bulkActionMenu = document.getElementById('bulkActionMenu');
     if (bulkActionMenu) {
@@ -359,24 +359,24 @@ function bulkUpdateStatus(status) {
 function submitBulkAction(action) {
     const selectedItems = [];
     const checkedBoxes = document.querySelectorAll('.item-checkbox:checked');
-    
+
     checkedBoxes.forEach(checkbox => {
         selectedItems.push(checkbox.value);
     });
-    
+
     if (selectedItems.length === 0) {
         alert('Pilih minimal satu pesanan.');
         return;
     }
-    
+
     const bulkActionInput = document.getElementById('bulkAction');
     const selectedItemsContainer = document.getElementById('selectedItems');
     const bulkActionForm = document.getElementById('bulkActionForm');
-    
+
     if (bulkActionInput) {
         bulkActionInput.value = action;
     }
-    
+
     if (selectedItemsContainer) {
         selectedItemsContainer.innerHTML = '';
         selectedItems.forEach(function(id) {
@@ -387,7 +387,7 @@ function submitBulkAction(action) {
             selectedItemsContainer.appendChild(input);
         });
     }
-    
+
     if (bulkActionForm) {
         bulkActionForm.submit();
     }
@@ -398,7 +398,7 @@ function toggleDropdown(button) {
     const dropdown = button.nextElementSibling;
     if (dropdown) {
         dropdown.classList.toggle('hidden');
-        
+
         // Close other dropdowns
         const allDropdowns = document.querySelectorAll('.dropdown-menu');
         allDropdowns.forEach(menu => {
@@ -417,6 +417,6 @@ document.addEventListener('click', function(event) {
             dropdown.classList.add('hidden');
         });
     }
-}
+});
 </script>
 @endpush

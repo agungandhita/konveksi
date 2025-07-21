@@ -67,7 +67,7 @@ class ManualChatbotService
     public function getResponse($message)
     {
         $message = strtolower(trim($message));
-        
+
         // Cek setiap kategori respons
         foreach ($this->responses as $category => $data) {
             foreach ($data['keywords'] as $keyword) {
@@ -76,16 +76,16 @@ class ManualChatbotService
                 }
             }
         }
-        
+
         // Jika tidak ada keyword yang cocok, berikan respons default
         return $this->getDefaultResponse();
     }
-    
+
     private function getRandomResponse($responses)
     {
         return $responses[array_rand($responses)];
     }
-    
+
     private function getDefaultResponse()
     {
         $defaultResponses = [
@@ -93,21 +93,21 @@ class ManualChatbotService
             'Halo! Saya asisten virtual Konveksi Surabaya 🤖\n\nCoba ketik salah satu kata kunci ini:\n• "halo" - untuk sapaan\n• "layanan" - info produk kami\n• "harga" - informasi harga\n• "kontak" - hubungi kami\n\nAtau langsung chat WhatsApp 081234567890! 💬',
             'Selamat datang di Konveksi Surabaya! 🎯\n\nSilakan ketik kata kunci seperti:\n✨ "layanan" untuk melihat produk\n✨ "harga" untuk info harga\n✨ "pemesanan" untuk cara order\n✨ "portofolio" untuk hasil kerja\n\nUntuk bantuan langsung: WhatsApp 081234567890! 📞'
         ];
-        
+
         return $defaultResponses[array_rand($defaultResponses)];
     }
-    
+
     public function getDetailedServiceInfo()
     {
         try {
             $layanan = Layanan::where('status', 'aktif')->with('hargaUkuran')->get();
-            
+
             if ($layanan->isEmpty()) {
                 return 'Informasi layanan sedang diperbarui. Hubungi WhatsApp 081234567890 untuk info terkini! 📱';
             }
-            
+
             $response = "📋 **LAYANAN KONVEKSI SURABAYA** 📋\n\n";
-            
+
             foreach ($layanan as $item) {
                 $response .= "🔸 **{$item->nama_layanan}**\n";
                 $response .= "   📝 {$item->deskripsi_singkat}\n";
@@ -115,11 +115,11 @@ class ManualChatbotService
                 $response .= "   📦 Min. order: {$item->minimal_order} {$item->satuan_order}\n";
                 $response .= "   💰 Mulai: Rp " . number_format($item->perkiraan_harga, 0, ',', '.') . "\n\n";
             }
-            
+
             $response .= "📱 Hubungi WhatsApp 081234567890 untuk penawaran khusus!";
-            
+
             return $response;
-            
+
         } catch (\Exception $e) {
             return 'Informasi layanan sedang diperbarui. Hubungi WhatsApp 081234567890 untuk info lengkap! 📱';
         }
