@@ -26,7 +26,7 @@ class PesananController extends Controller
 
         // Ambil semua layanan aktif untuk dropdown dengan harga ukuran
         $layanan = Layanan::with('hargaUkuran')->aktif()->orderBy('nama_layanan', 'asc')->get();
-        
+
         // Ambil opsi ukuran
         $ukuranOptions = LayananHargaUkuran::getUkuranOptions();
 
@@ -52,8 +52,8 @@ class PesananController extends Controller
                 'regex:/^(\+62|62|08)[0-9]{8,13}$/'
             ],
             'jumlah_order' => 'required|integer|min:1',
-            'ukuran_baju' => 'required|in:S,M,L,XL,XXL,Custom',
-            'ukuran_custom' => 'required_if:ukuran_baju,Custom|nullable|string|max:100',
+            'ukuran_baju' => 'required|in:XS,S,M,L,XL,2XL,3XL,4XL',
+            'ukuran_custom' => 'nullable|string|max:100',
             'file_desain_baju' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120', // 5MB
             'tambahan_bordir' => 'boolean',
             'file_desain_bordir' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120', // 5MB
@@ -68,7 +68,7 @@ class PesananController extends Controller
             'jumlah_order.required' => 'Jumlah order harus diisi.',
             'jumlah_order.min' => 'Jumlah order minimal 1.',
             'ukuran_baju.required' => 'Ukuran baju harus dipilih.',
-            'ukuran_custom.required_if' => 'Ukuran custom harus diisi jika memilih ukuran Custom.',
+            'ukuran_custom.required_if' => 'Ukuran custom harus diisi jika memilih ukuran custom.',
             'file_desain_baju.required' => 'File desain baju harus diunggah.',
             'file_desain_baju.mimes' => 'File desain baju harus berformat JPG, PNG, atau PDF.',
             'file_desain_baju.max' => 'Ukuran file desain baju maksimal 5MB.',
@@ -192,7 +192,7 @@ class PesananController extends Controller
     {
         $request->validate([
             'layanan_id' => 'required|exists:layanan,id',
-            'ukuran' => 'required|in:S,M,L,XL,XXL,Custom'
+            'ukuran' => 'required|in:XS,S,M,L,XL,2XL,3XL,4XL'
         ]);
 
         $layanan = Layanan::findOrFail($request->layanan_id);
@@ -202,6 +202,29 @@ class PesananController extends Controller
             'success' => true,
             'harga' => $harga,
             'formatted_harga' => 'Rp ' . number_format($harga, 0, ',', '.')
+        ]);
+    }
+
+    /**
+     * API untuk mendapatkan semua harga ukuran berdasarkan layanan
+     */
+    public function getAllHargaUkuran(Request $request)
+    {
+        $request->validate([
+            'layanan_id' => 'required|exists:layanan,id'
+        ]);
+
+        $layanan = Layanan::with('hargaUkuran')->findOrFail($request->layanan_id);
+        $hargaUkuran = $layanan->hargaUkuran->pluck('harga', 'ukuran');
+
+        return response()->json([
+            'success' => true,
+            'harga_ukuran' => $hargaUkuran,
+            'layanan' => [
+                'id' => $layanan->id,
+                'nama_layanan' => $layanan->nama_layanan,
+                'perkiraan_harga' => $layanan->perkiraan_harga
+            ]
         ]);
     }
 }

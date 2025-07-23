@@ -16,17 +16,19 @@ class LayananHargaUkuranSeeder extends Seeder
     {
         // Ambil semua layanan yang ada
         $layanan = Layanan::all();
-        
+
         // Daftar ukuran dan harga default
         $ukuranHarga = [
+            'XS' => 45000,
             'S' => 50000,
             'M' => 55000,
             'L' => 60000,
             'XL' => 65000,
-            'XXL' => 70000,
-            'Custom' => 75000
+            '2XL' => 70000,
+            '3XL' => 75000,
+            '4XL' => 80000
         ];
-        
+
         foreach ($layanan as $item) {
             foreach ($ukuranHarga as $ukuran => $harga) {
                 LayananHargaUkuran::create([

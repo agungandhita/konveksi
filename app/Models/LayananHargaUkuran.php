@@ -37,12 +37,14 @@ class LayananHargaUkuran extends Model
     public static function getUkuranOptions()
     {
         return [
+            'XS' => 'XS',
             'S' => 'S',
-            'M' => 'M', 
+            'M' => 'M',
             'L' => 'L',
             'XL' => 'XL',
-            'XXL' => 'XXL',
-            'Custom' => 'Custom'
+            '2XL' => '2XL',
+            '3XL' => '3XL',
+            '4XL' => '4XL'
         ];
     }
 }

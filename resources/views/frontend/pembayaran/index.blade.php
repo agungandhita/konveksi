@@ -46,16 +46,45 @@
                 <!-- Rincian Harga -->
                 <h3 class="text-lg font-semibold text-gray-800 mb-3">Rincian Harga</h3>
                 <div class="space-y-2">
+                    @php
+                        // Hitung komponen harga
+                        $hargaLayanan = $pesanan->layanan->perkiraan_harga;
+                        $hargaUkuranObj = $pesanan->layanan->hargaUkuran()->where('ukuran', $pesanan->ukuran_baju)->first();
+                        $hargaUkuran = $hargaUkuranObj ? $hargaUkuranObj->harga : 0;
+                        $hargaPerUnit = $hargaLayanan + $hargaUkuran;
+                        $totalHargaLayanan = $hargaPerUnit * $pesanan->jumlah_order;
+                        $hargaBordir = $pesanan->getHargaBordir();
+                    @endphp
+                    
                     <div class="flex justify-between">
-                        <span class="text-gray-600">Harga Layanan ({{ $pesanan->jumlah_order }} pcs):</span>
-                        <span>Rp {{ number_format($pesanan->layanan->perkiraan_harga * $pesanan->jumlah_order, 0, ',', '.') }}</span>
+                        <span class="text-gray-600">Harga Dasar Layanan:</span>
+                        <span>Rp {{ number_format($hargaLayanan, 0, ',', '.') }}</span>
                     </div>
+                    
+                    @if($hargaUkuran > 0)
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Biaya Ukuran ({{ $pesanan->ukuran_baju }}):</span>
+                        <span>Rp {{ number_format($hargaUkuran, 0, ',', '.') }}</span>
+                    </div>
+                    @endif
+                    
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Harga per Unit:</span>
+                        <span>Rp {{ number_format($hargaPerUnit, 0, ',', '.') }}</span>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Subtotal Layanan ({{ $pesanan->jumlah_order }} pcs):</span>
+                        <span>Rp {{ number_format($totalHargaLayanan, 0, ',', '.') }}</span>
+                    </div>
+                    
                     @if($pesanan->tambahan_bordir)
                     <div class="flex justify-between">
                         <span class="text-gray-600">Harga Bordir ({{ $pesanan->jumlah_order }} pcs):</span>
                         <span>{{ $pesanan->formatted_harga_bordir }}</span>
                     </div>
                     @endif
+                    
                     <hr class="my-2">
                     <div class="flex justify-between text-lg font-bold text-blue-600">
                         <span>Total Pembayaran:</span>

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('nama_pemesan');
             $table->string('nomor_whatsapp');
             $table->integer('jumlah_order');
-            $table->enum('ukuran_baju', ['S', 'M', 'L', 'XL', 'XXL', 'Custom']);
+            $table->enum('ukuran_baju', ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL']);
             $table->string('ukuran_custom')->nullable();
             $table->string('file_desain_baju')->nullable();
             $table->boolean('tambahan_bordir')->default(false);

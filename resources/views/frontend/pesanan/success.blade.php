@@ -51,9 +51,9 @@
                         <span class="font-medium text-gray-600">Ukuran:</span>
                         <span class="font-semibold text-gray-900">
                             {{ $pesanan->ukuran_baju }}
-                            @if($pesanan->ukuran_baju === 'Custom' && $pesanan->ukuran_custom)
-                                ({{ $pesanan->ukuran_custom }})
-                            @endif
+                        @if($pesanan->ukuran_custom)
+                            (Custom: {{ $pesanan->ukuran_custom }})
+                        @endif
                         </span>
                     </div>
 

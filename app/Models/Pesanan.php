@@ -90,20 +90,20 @@ class Pesanan extends Model
     public function getFormattedWhatsappAttribute()
     {
         $nomor = $this->nomor_whatsapp;
-        
+
         // Hapus karakter non-digit
         $nomor = preg_replace('/[^0-9]/', '', $nomor);
-        
+
         // Jika dimulai dengan 08, ganti dengan 628
         if (substr($nomor, 0, 2) === '08') {
             $nomor = '628' . substr($nomor, 2);
         }
-        
+
         // Jika dimulai dengan 62, pastikan tidak ada duplikasi
         if (substr($nomor, 0, 2) === '62' && substr($nomor, 0, 3) !== '628') {
             $nomor = '628' . substr($nomor, 2);
         }
-        
+
         return $nomor;
     }
 
@@ -129,12 +129,23 @@ class Pesanan extends Model
      */
     public function calculateTotalPrice()
     {
-        // Dapatkan harga berdasarkan ukuran, jika tidak ada gunakan harga default
-        $hargaPerPcs = $this->layanan->getHargaByUkuran($this->ukuran_baju);
-        $hargaLayanan = $hargaPerPcs * $this->jumlah_order;
-        $hargaBordir = $this->tambahan_bordir ? 15000 * $this->jumlah_order : 0; // Rp 15.000 per pcs untuk bordir
+        // Dapatkan harga layanan dasar
+        $hargaLayanan = $this->layanan->perkiraan_harga;
         
-        return $hargaLayanan + $hargaBordir;
+        // Dapatkan harga ukuran
+        $hargaUkuranObj = $this->layanan->hargaUkuran()->where('ukuran', $this->ukuran_baju)->first();
+        $hargaUkuran = $hargaUkuranObj ? $hargaUkuranObj->harga : 0;
+        
+        // Hitung harga per unit (harga layanan + harga ukuran)
+        $hargaPerUnit = $hargaLayanan + $hargaUkuran;
+        
+        // Hitung total harga layanan
+        $totalHargaLayanan = $hargaPerUnit * $this->jumlah_order;
+        
+        // Hitung harga bordir jika ada
+        $hargaBordir = $this->tambahan_bordir ? 15000 * $this->jumlah_order : 0; // Rp 15.000 per pcs untuk bordir
+
+        return $totalHargaLayanan + $hargaBordir;
     }
 
     /**
@@ -171,26 +182,26 @@ class Pesanan extends Model
         $message .= "Layanan: {$this->layanan->nama_layanan}\n";
         $message .= "Jumlah Order: {$this->jumlah_order}\n";
         $message .= "Ukuran: {$this->ukuran_baju}";
-        
-        if ($this->ukuran_baju === 'Custom' && $this->ukuran_custom) {
-            $message .= " ({$this->ukuran_custom})";
+
+        if ($this->ukuran_custom) {
+            $message .= " (Custom: {$this->ukuran_custom})";
         }
-        
+
         $message .= "\n";
-        
+
         if ($this->tambahan_bordir) {
             $message .= "Tambahan Bordir: Ya\n";
             if ($this->keterangan_bordir) {
                 $message .= "Keterangan Bordir: {$this->keterangan_bordir}\n";
             }
         }
-        
+
         if ($this->keterangan_tambahan) {
             $message .= "Keterangan Tambahan: {$this->keterangan_tambahan}\n";
         }
-        
+
         $message .= "\nTerima kasih! Mohon konfirmasi untuk melanjutkan pemesanan.";
-        
+
         return urlencode($message);
     }
 }

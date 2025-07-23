@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('layanan_harga_ukuran', function (Blueprint $table) {
             $table->id();
             $table->foreignId('layanan_id')->constrained('layanan')->onDelete('cascade');
-            $table->enum('ukuran', ['S', 'M', 'L', 'XL', 'XXL', 'Custom']);
+            $table->enum('ukuran', ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL']);
             $table->decimal('harga', 12, 2);
             $table->timestamps();
-            
+
             // Unique constraint untuk mencegah duplikasi ukuran pada layanan yang sama
             $table->unique(['layanan_id', 'ukuran']);
         });

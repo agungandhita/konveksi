@@ -45,10 +45,12 @@
                         Layanan yang Dipilih <span class="text-red-500">*</span>
                     </label>
                     <select name="layanan_id" id="layanan_id" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent">
+                            class="w-full px-4 py-3 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 border-2 shadow-sm">
                         <option value="">Pilih Layanan</option>
                         @foreach($layanan as $item)
-                            <option value="{{ $item->id }}" {{ old('layanan_id') == $item->id ? 'selected' : '' }} data-harga="{{ $item->perkiraan_harga }}">
+                            <option value="{{ $item->id }}" {{ old('layanan_id') == $item->id ? 'selected' : '' }} 
+                                    data-harga-dasar="{{ $item->perkiraan_harga }}" 
+                                    data-nama="{{ $item->nama_layanan }}">
                                 {{ $item->nama_layanan }} - {{ $item->formatted_harga }}
                             </option>
                         @endforeach
@@ -110,33 +112,75 @@
                             <option value="{{ $ukuran }}" {{ old('ukuran_baju') == $ukuran ? 'selected' : '' }}>{{ $ukuran }}</option>
                         @endforeach
                     </select>
+
+                    <!-- Detail Harga per Ukuran -->
+                    <div id="harga_ukuran_detail" class="mt-3 hidden">
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6 shadow-sm">
+                            <div class="flex items-center mb-4">
+                                <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                                </svg>
+                                <h4 class="text-lg font-bold text-blue-800">Daftar Harga per Ukuran</h4>
+                            </div>
+                            <div id="harga_ukuran_list" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <!-- Harga ukuran akan dimuat di sini -->
+                            </div>
+                            <div class="mt-4 p-3 bg-blue-100 rounded-lg">
+                                <p class="text-sm text-blue-700 font-medium">💡 <strong>Tips:</strong> Pilih ukuran yang sesuai untuk melihat harga dan estimasi total</p>
+                            </div>
+                        </div>
+                    </div>
+
                     @error('ukuran_baju')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <!-- Harga Display -->
-                <div id="harga_display" class="hidden">
-                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm font-medium text-blue-800">Harga per unit:</span>
-                            <span id="harga_per_unit" class="text-lg font-bold text-blue-900">-</span>
+                <!-- Kalkulasi Harga -->
+                <div id="kalkulasi_harga" class="hidden">
+                    <div class="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-6 shadow-lg">
+                        <div class="flex items-center mb-4">
+                            <svg class="w-6 h-6 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                            </svg>
+                            <h4 class="text-lg font-bold text-green-800">Kalkulasi Harga</h4>
                         </div>
-                        <div class="flex items-center justify-between mt-2">
-                            <span class="text-sm font-medium text-blue-800">Total estimasi:</span>
-                            <span id="total_estimasi" class="text-lg font-bold text-blue-900">-</span>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-green-100">
+                                <span class="text-sm font-semibold text-green-700">🏷️ Harga dasar layanan:</span>
+                                <span id="display_harga_dasar" class="text-lg font-bold text-green-900">-</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-white rounded-lg border border-green-100">
+                                <span class="text-sm font-semibold text-green-700">📏 Biaya tambahan ukuran:</span>
+                                <span id="display_biaya_ukuran" class="text-lg font-bold text-green-900">-</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
+                                <span class="text-sm font-semibold text-blue-700">💰 Harga per unit:</span>
+                                <span id="display_harga_per_unit" class="text-xl font-bold text-blue-900">-</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                                <span class="text-sm font-semibold text-yellow-700">📦 Jumlah order:</span>
+                                <span id="display_jumlah_order" class="text-lg font-bold text-yellow-900">-</span>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-green-100 rounded-lg border border-green-300">
+                                <span class="text-lg font-bold text-green-800">🧮 Total Estimasi:</span>
+                                <span id="display_total_estimasi" class="text-2xl font-bold text-green-900">-</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                            <p class="text-xs text-yellow-700 font-medium">⚠️ <strong>Catatan:</strong> Harga ini adalah estimasi awal. Harga final akan dikonfirmasi setelah konsultasi desain.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Ukuran Custom (Hidden by default) -->
-                <div id="ukuran_custom_field" class="hidden">
+                <!-- Ukuran Custom -->
+                <div>
                     <label for="ukuran_custom" class="block text-sm font-semibold text-gray-700 mb-2">
-                        Ukuran Custom <span class="text-red-500">*</span>
+                        Keterangan Ukuran Tambahan <span class="text-gray-500">(Opsional)</span>
                     </label>
                     <input type="text" name="ukuran_custom" id="ukuran_custom"
                            value="{{ old('ukuran_custom') }}"
-                           placeholder="Contoh: Lingkar dada 100cm, Panjang 70cm"
+                           placeholder="Contoh: Lingkar dada 100cm, Panjang 70cm, atau keterangan ukuran khusus lainnya"
                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent">
                     @error('ukuran_custom')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -172,7 +216,7 @@
                     </div>
                 </div>
 
-                <!-- Fields Bordir (Hidden by default) -->
+                <!-- Fields Bordir -->
                 <div id="bordir_fields" class="space-y-4 {{ old('tambahan_bordir') ? '' : 'hidden' }}">
                     <!-- Upload Desain Bordir -->
                     <div>
@@ -267,36 +311,189 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const ukuranBaju = document.getElementById('ukuran_baju');
-    const ukuranCustomField = document.getElementById('ukuran_custom_field');
-    const ukuranCustomInput = document.getElementById('ukuran_custom');
-
+    // Element references
+    const layananSelect = document.getElementById('layanan_id');
+    const ukuranSelect = document.getElementById('ukuran_baju');
+    const jumlahOrderInput = document.getElementById('jumlah_order');
     const tambahBordir = document.getElementById('tambahan_bordir');
     const bordirFields = document.getElementById('bordir_fields');
     const fileDesainBordir = document.getElementById('file_desain_bordir');
-
     const keteranganTambahan = document.getElementById('keterangan_tambahan');
     const charCount = document.getElementById('char_count');
-
     const submitBtn = document.getElementById('submitBtn');
-    const form = document.getElementById('pesananForm');
+    
+    // Display elements
+    const hargaUkuranDetail = document.getElementById('harga_ukuran_detail');
+    const hargaUkuranList = document.getElementById('harga_ukuran_list');
+    const kalkulasiHarga = document.getElementById('kalkulasi_harga');
+    
+    // Data harga ukuran dari backend
+    const layananHargaData = @json($layanan->mapWithKeys(function($item) {
+        return [$item->id => $item->hargaUkuran->pluck('harga', 'ukuran')];
+    }));
+    
+    // State variables
+    let currentCalculation = {
+        hargaDasar: 0,
+        biayaUkuran: 0,
+        hargaPerUnit: 0,
+        jumlahOrder: 0,
+        totalEstimasi: 0
+    };
 
-    // Handle ukuran custom
-    ukuranBaju.addEventListener('change', function() {
-        if (this.value === 'Custom') {
-            ukuranCustomField.classList.remove('hidden');
-            ukuranCustomInput.required = true;
-        } else {
-            ukuranCustomField.classList.add('hidden');
-            ukuranCustomInput.required = false;
-            ukuranCustomInput.value = '';
+    // Utility functions
+    function formatCurrency(amount) {
+        return 'Rp ' + new Intl.NumberFormat('id-ID').format(amount);
+    }
+
+    function showLoading(element, message = 'Memuat data...') {
+        element.innerHTML = `
+            <div class="col-span-full text-center p-8">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-3"></div>
+                <p class="text-blue-600 font-medium">${message}</p>
+            </div>
+        `;
+    }
+
+    // Calculation functions
+    function calculatePrices() {
+        const layananId = layananSelect.value;
+        const ukuran = ukuranSelect.value;
+        const jumlah = parseInt(jumlahOrderInput.value) || 0;
+        
+        // Reset calculation
+        currentCalculation = {
+            hargaDasar: 0,
+            biayaUkuran: 0,
+            hargaPerUnit: 0,
+            jumlahOrder: jumlah,
+            totalEstimasi: 0
+        };
+        
+        if (!layananId || !ukuran) {
+            updateCalculationDisplay();
+            return;
         }
-        validateForm();
-    });
+        
+        // Get harga dasar layanan
+        const selectedOption = layananSelect.options[layananSelect.selectedIndex];
+        const hargaDasar = parseInt(selectedOption.getAttribute('data-harga-dasar')) || 0;
+        
+        // Get biaya ukuran
+        let biayaUkuran = 0;
+        if (layananHargaData[layananId] && layananHargaData[layananId][ukuran]) {
+            biayaUkuran = parseInt(layananHargaData[layananId][ukuran]) || 0;
+        }
+        
+        // Calculate totals
+        const hargaPerUnit = hargaDasar + biayaUkuran;
+        const totalEstimasi = hargaPerUnit * jumlah;
+        
+        // Update state
+        currentCalculation = {
+            hargaDasar: hargaDasar,
+            biayaUkuran: biayaUkuran,
+            hargaPerUnit: hargaPerUnit,
+            jumlahOrder: jumlah,
+            totalEstimasi: totalEstimasi
+        };
+        
+        updateCalculationDisplay();
+    }
 
-    // Handle tambahan bordir
-    tambahBordir.addEventListener('change', function() {
-        if (this.checked) {
+    function updateCalculationDisplay() {
+        // Update display elements
+        document.getElementById('display_harga_dasar').textContent = formatCurrency(currentCalculation.hargaDasar);
+        document.getElementById('display_biaya_ukuran').textContent = formatCurrency(currentCalculation.biayaUkuran);
+        document.getElementById('display_harga_per_unit').textContent = formatCurrency(currentCalculation.hargaPerUnit);
+        document.getElementById('display_jumlah_order').textContent = currentCalculation.jumlahOrder + ' unit';
+        document.getElementById('display_total_estimasi').textContent = formatCurrency(currentCalculation.totalEstimasi);
+        
+        // Show/hide calculation display
+        if (currentCalculation.hargaPerUnit > 0 && currentCalculation.jumlahOrder > 0) {
+            kalkulasiHarga.classList.remove('hidden');
+        } else {
+            kalkulasiHarga.classList.add('hidden');
+        }
+    }
+
+    function updateHargaUkuranList() {
+        const layananId = layananSelect.value;
+        
+        if (!layananId || !layananHargaData[layananId]) {
+            hargaUkuranDetail.classList.add('hidden');
+            return;
+        }
+        
+        const hargaData = layananHargaData[layananId];
+        
+        // Show loading
+        hargaUkuranDetail.classList.remove('hidden');
+        showLoading(hargaUkuranList, 'Memuat data harga ukuran...');
+        
+        // Simulate loading delay for better UX
+        setTimeout(() => {
+            let hargaHtml = '';
+            const ukuranOrder = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL'];
+            
+            ukuranOrder.forEach(ukuran => {
+                if (hargaData[ukuran]) {
+                    const harga = hargaData[ukuran];
+                    hargaHtml += `
+                        <div class="bg-white border border-blue-200 rounded-xl p-4 text-center shadow-sm hover:shadow-md transition-all duration-200 hover:border-blue-300">
+                            <div class="text-lg font-bold text-blue-900 mb-1">${ukuran}</div>
+                            <div class="text-sm font-semibold text-blue-700">${formatCurrency(harga)}</div>
+                            <div class="mt-2 w-full h-1 bg-blue-100 rounded-full"></div>
+                        </div>
+                    `;
+                } else {
+                    hargaHtml += `
+                        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 text-center opacity-60">
+                            <div class="text-lg font-bold text-gray-400 mb-1">${ukuran}</div>
+                            <div class="text-sm text-gray-400">Tidak tersedia</div>
+                            <div class="mt-2 w-full h-1 bg-gray-200 rounded-full"></div>
+                        </div>
+                    `;
+                }
+            });
+            
+            if (hargaHtml === '') {
+                hargaHtml = `
+                    <div class="col-span-full text-center p-8">
+                        <div class="text-gray-400 mb-2">
+                            <svg class="w-12 h-12 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <p class="text-gray-500 font-medium">Belum ada data harga untuk layanan ini</p>
+                        <p class="text-gray-400 text-sm mt-1">Silakan hubungi admin untuk informasi harga</p>
+                    </div>
+                `;
+            }
+            
+            hargaUkuranList.innerHTML = hargaHtml;
+        }, 300);
+    }
+
+    // Event handlers
+    function handleLayananChange() {
+        updateHargaUkuranList();
+        calculatePrices();
+        validateForm();
+    }
+
+    function handleUkuranChange() {
+        calculatePrices();
+        validateForm();
+    }
+
+    function handleJumlahChange() {
+        calculatePrices();
+        validateForm();
+    }
+
+    function handleBordirChange() {
+        if (tambahBordir.checked) {
             bordirFields.classList.remove('hidden');
             fileDesainBordir.required = true;
         } else {
@@ -304,28 +501,34 @@ document.addEventListener('DOMContentLoaded', function() {
             fileDesainBordir.required = false;
             fileDesainBordir.value = '';
             document.getElementById('keterangan_bordir').value = '';
+            // Clear preview
+            const preview = document.getElementById('preview_desain_bordir');
+            if (preview) preview.classList.add('hidden');
         }
         validateForm();
-    });
+    }
 
-    // Character counter
-    keteranganTambahan.addEventListener('input', function() {
-        const length = this.value.length;
+    function handleCharacterCount() {
+        const length = keteranganTambahan.value.length;
         charCount.textContent = length + '/300';
-
+        
         if (length > 300) {
             charCount.classList.add('text-red-500');
+            charCount.classList.remove('text-gray-500');
         } else {
             charCount.classList.remove('text-red-500');
+            charCount.classList.add('text-gray-500');
         }
-    });
+    }
 
-    // File preview functions
+    // File preview setup
     function setupFilePreview(inputId, previewId, imgId) {
         const input = document.getElementById(inputId);
         const preview = document.getElementById(previewId);
         const img = document.getElementById(imgId);
-
+        
+        if (!input || !preview || !img) return;
+        
         input.addEventListener('change', function() {
             const file = this.files[0];
             if (file && file.type.startsWith('image/')) {
@@ -342,126 +545,70 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Setup file previews
-    setupFilePreview('file_desain_baju', 'preview_desain_baju', 'img_preview_desain_baju');
-    setupFilePreview('file_desain_bordir', 'preview_desain_bordir', 'img_preview_desain_bordir');
-    setupFilePreview('file_nama_tag', 'preview_nama_tag', 'img_preview_nama_tag');
-
     // Form validation
     function validateForm() {
-        const layananId = document.getElementById('layanan_id').value;
-        const nomorWa = document.getElementById('nomor_whatsapp').value;
-        const jumlahOrder = document.getElementById('jumlah_order').value;
-        const ukuranBaju = document.getElementById('ukuran_baju').value;
+        const layananId = layananSelect.value;
+        const nomorWa = document.getElementById('nomor_whatsapp').value.trim();
+        const jumlahOrder = jumlahOrderInput.value;
+        const ukuranBaju = ukuranSelect.value;
         const fileDesainBaju = document.getElementById('file_desain_baju').files.length;
-
+        
         let isValid = layananId && nomorWa && jumlahOrder && ukuranBaju && fileDesainBaju;
-
-        // Check ukuran custom
-        if (ukuranBaju === 'Custom') {
-            const ukuranCustom = document.getElementById('ukuran_custom').value;
-            isValid = isValid && ukuranCustom;
-        }
-
-        // Check bordir files
+        
+        // Check bordir files if bordir is selected
         if (tambahBordir.checked) {
-            const fileDesainBordir = document.getElementById('file_desain_bordir').files.length;
-            isValid = isValid && fileDesainBordir;
+            const fileDesainBordirCount = fileDesainBordir.files.length;
+            isValid = isValid && fileDesainBordirCount;
         }
-
+        
+        // Check character limit
+        if (keteranganTambahan.value.length > 300) {
+            isValid = false;
+        }
+        
         submitBtn.disabled = !isValid;
         updateButtonStatus();
     }
 
-    // Update button status indicator
     function updateButtonStatus() {
         const buttonStatus = document.getElementById('buttonStatus');
         
         if (submitBtn.disabled) {
             buttonStatus.innerHTML = '<p class="text-xs text-red-500 font-medium">⚠️ Lengkapi semua field yang wajib diisi untuk mengaktifkan tombol</p>';
         } else {
-            buttonStatus.innerHTML = '<p class="text-xs text-green-600 font-medium">✅ Form sudah lengkap, siap untuk dikirim!</p>';
+            buttonStatus.innerHTML = '<p class="text-xs text-green-600 font-medium">✅ Semua field sudah lengkap, siap untuk dikirim!</p>';
         }
     }
 
-    // Add event listeners for validation
-    const requiredFields = ['layanan_id', 'nomor_whatsapp', 'jumlah_order', 'ukuran_baju', 'file_desain_baju'];
-    requiredFields.forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        if (field) {
-            field.addEventListener('change', validateForm);
-            field.addEventListener('input', validateForm);
+    // Event listeners
+    layananSelect.addEventListener('change', handleLayananChange);
+    ukuranSelect.addEventListener('change', handleUkuranChange);
+    jumlahOrderInput.addEventListener('input', handleJumlahChange);
+    tambahBordir.addEventListener('change', handleBordirChange);
+    keteranganTambahan.addEventListener('input', handleCharacterCount);
+    
+    // Add validation listeners
+    ['layanan_id', 'nomor_whatsapp', 'jumlah_order', 'ukuran_baju', 'file_desain_baju'].forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('change', validateForm);
+            element.addEventListener('input', validateForm);
         }
     });
-
-    // Update harga berdasarkan layanan dan ukuran
-    function updateHarga() {
-        const layananSelect = document.getElementById('layanan_id');
-        const ukuranSelect = document.getElementById('ukuran_baju');
-        const jumlahInput = document.getElementById('jumlah_order');
-        const hargaDisplay = document.getElementById('harga_display');
-        const hargaPerUnit = document.getElementById('harga_per_unit');
-        const totalEstimasi = document.getElementById('total_estimasi');
-
-        if (layananSelect.value && ukuranSelect.value) {
-            // Ambil harga dari API
-            fetch('/api/pesanan/harga-ukuran', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({
-                    layanan_id: layananSelect.value,
-                    ukuran: ukuranSelect.value
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const harga = data.harga;
-                    const jumlah = parseInt(jumlahInput.value) || 1;
-                    const total = harga * jumlah;
-
-                    hargaPerUnit.textContent = 'Rp ' + harga.toLocaleString('id-ID');
-                    totalEstimasi.textContent = 'Rp ' + total.toLocaleString('id-ID');
-                    hargaDisplay.classList.remove('hidden');
-                } else {
-                    // Fallback ke harga default
-                    const selectedOption = layananSelect.options[layananSelect.selectedIndex];
-                    const defaultHarga = parseInt(selectedOption.dataset.harga) || 0;
-                    const jumlah = parseInt(jumlahInput.value) || 1;
-                    const total = defaultHarga * jumlah;
-
-                    if (defaultHarga > 0) {
-                        hargaPerUnit.textContent = 'Rp ' + defaultHarga.toLocaleString('id-ID');
-                        totalEstimasi.textContent = 'Rp ' + total.toLocaleString('id-ID');
-                        hargaDisplay.classList.remove('hidden');
-                    } else {
-                        hargaDisplay.classList.add('hidden');
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                hargaDisplay.classList.add('hidden');
-            });
-        } else {
-            hargaDisplay.classList.add('hidden');
-        }
-    }
-
-    // Event listeners untuk update harga
-    document.getElementById('layanan_id').addEventListener('change', updateHarga);
-    document.getElementById('ukuran_baju').addEventListener('change', updateHarga);
-    document.getElementById('jumlah_order').addEventListener('input', updateHarga);
-
-    // Initial validation
+    
+    // Setup file previews
+    setupFilePreview('file_desain_baju', 'preview_desain_baju', 'img_preview_desain_baju');
+    setupFilePreview('file_desain_bordir', 'preview_desain_bordir', 'img_preview_desain_bordir');
+    setupFilePreview('file_nama_tag', 'preview_nama_tag', 'img_preview_nama_tag');
+    
+    // Initialize
+    handleCharacterCount();
     validateForm();
-
-    // Update character count on page load
-    const currentLength = keteranganTambahan.value.length;
-    charCount.textContent = currentLength + '/300';
+    
+    // Trigger initial calculation if values are already selected
+    if (layananSelect.value) {
+        handleLayananChange();
+    }
 });
 </script>
 @endpush

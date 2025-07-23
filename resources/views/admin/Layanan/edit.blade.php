@@ -171,14 +171,14 @@
                                         <label for="harga_{{ $key }}" class="block text-xs font-medium text-gray-600 mb-1">{{ $label }}</label>
                                         <div class="flex">
                                             <span class="px-2 py-1 bg-white border border-r-0 border-gray-300 rounded-l text-xs text-gray-500">Rp</span>
-                                            <input type="number" 
+                                            <input type="number"
                                                    class="flex-1 px-2 py-1 text-sm border border-gray-300 rounded-r focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
-                                                   id="harga_{{ $key }}" 
+                                                   id="harga_{{ $key }}"
                                                    name="harga_ukuran[{{ $key }}]"
                                                    value="{{ old('harga_ukuran.' . $key, $hargaUkuran[$key] ?? '') }}"
-                                                   min="0" 
-                                                   step="1000" 
-                                                   placeholder="{{ $key == 'Custom' ? '75000' : (50000 + (array_search($key, array_keys($ukuranOptions)) * 5000)) }}">
+                                                   min="0"
+                                                   step="1000"
+                                                   placeholder="{{ 50000 + (array_search($key, array_keys($ukuranOptions)) * 5000) }}">
                                         </div>
                                     </div>
                                     @endforeach

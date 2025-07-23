@@ -39,7 +39,7 @@
                     </h1>
                     <p class="text-gray-600">Dibuat pada {{ $pesanan->created_at->format('d M Y, H:i') }}</p>
                 </div>
-                
+
                 <div class="mt-4 sm:mt-0">
                     <span class="inline-flex px-4 py-2 rounded-full text-sm font-medium {{ $pesanan->status_badge }}">
                         {{ ucfirst($pesanan->status) }}
@@ -54,41 +54,41 @@
                 <!-- Informasi Pesanan -->
                 <div class="bg-white rounded-2xl shadow-lg p-8">
                     <h2 class="text-xl font-bold text-gray-900 mb-6">Informasi Pesanan</h2>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-600 mb-1">Nama Pemesan</label>
                                 <p class="text-gray-900 font-semibold">{{ $pesanan->nama_pemesan }}</p>
                             </div>
-                            
+
                             <div>
                                 <label class="block text-sm font-medium text-gray-600 mb-1">Layanan</label>
                                 <p class="text-gray-900 font-semibold">{{ $pesanan->layanan->nama_layanan }}</p>
                             </div>
-                            
+
                             <div>
                                 <label class="block text-sm font-medium text-gray-600 mb-1">Jumlah Order</label>
                                 <p class="text-gray-900 font-semibold">{{ $pesanan->jumlah_order }} pcs</p>
                             </div>
                         </div>
-                        
+
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-600 mb-1">Nomor WhatsApp</label>
                                 <p class="text-gray-900 font-semibold">{{ $pesanan->nomor_whatsapp }}</p>
                             </div>
-                            
+
                             <div>
                                 <label class="block text-sm font-medium text-gray-600 mb-1">Ukuran Baju</label>
                                 <p class="text-gray-900 font-semibold">
                                     {{ $pesanan->ukuran_baju }}
-                                    @if($pesanan->ukuran_baju === 'Custom' && $pesanan->ukuran_custom)
-                                        <span class="text-sm text-gray-500 block">({{ $pesanan->ukuran_custom }})</span>
-                                    @endif
+                            @if($pesanan->ukuran_custom)
+                                <span class="text-sm text-gray-500 block">(Custom: {{ $pesanan->ukuran_custom }})</span>
+                            @endif
                                 </p>
                             </div>
-                            
+
                             <div>
                                 <label class="block text-sm font-medium text-gray-600 mb-1">Tambahan Bordir</label>
                                 <p class="text-gray-900 font-semibold">
@@ -97,14 +97,14 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     @if($pesanan->keterangan_tambahan)
                         <div class="mt-6 p-4 bg-gray-50 rounded-lg">
                             <label class="block text-sm font-medium text-gray-600 mb-2">Keterangan Tambahan</label>
                             <p class="text-gray-700">{{ $pesanan->keterangan_tambahan }}</p>
                         </div>
                     @endif
-                    
+
                     @if($pesanan->tambahan_bordir && $pesanan->keterangan_bordir)
                         <div class="mt-6 p-4 bg-blue-50 rounded-lg">
                             <label class="block text-sm font-medium text-gray-600 mb-2">Keterangan Bordir</label>
@@ -116,7 +116,7 @@
                 <!-- File yang Diunggah -->
                 <div class="bg-white rounded-2xl shadow-lg p-8">
                     <h2 class="text-xl font-bold text-gray-900 mb-6">File yang Diunggah</h2>
-                    
+
                     <div class="space-y-6">
                         <!-- Desain Baju -->
                         @if($pesanan->file_desain_baju)
@@ -124,8 +124,8 @@
                                 <label class="block text-sm font-medium text-gray-600 mb-3">Desain Baju</label>
                                 <div class="border border-gray-200 rounded-lg p-4">
                                     @if(in_array(pathinfo($pesanan->file_desain_baju, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png']))
-                                        <img src="{{ Storage::url($pesanan->file_desain_baju) }}" 
-                                             alt="Desain Baju" 
+                                        <img src="{{ Storage::url($pesanan->file_desain_baju) }}"
+                                             alt="Desain Baju"
                                              class="max-w-full h-auto max-h-64 rounded-lg mx-auto">
                                     @else
                                         <div class="flex items-center space-x-3 text-gray-600">
@@ -136,7 +136,7 @@
                                         </div>
                                     @endif
                                     <div class="mt-3">
-                                        <a href="{{ Storage::url($pesanan->file_desain_baju) }}" 
+                                        <a href="{{ Storage::url($pesanan->file_desain_baju) }}"
                                            target="_blank"
                                            class="inline-flex items-center space-x-2 text-slate-600 hover:text-slate-800 font-medium">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,8 +155,8 @@
                                 <label class="block text-sm font-medium text-gray-600 mb-3">Desain Bordir</label>
                                 <div class="border border-gray-200 rounded-lg p-4">
                                     @if(in_array(pathinfo($pesanan->file_desain_bordir, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png']))
-                                        <img src="{{ Storage::url($pesanan->file_desain_bordir) }}" 
-                                             alt="Desain Bordir" 
+                                        <img src="{{ Storage::url($pesanan->file_desain_bordir) }}"
+                                             alt="Desain Bordir"
                                              class="max-w-full h-auto max-h-64 rounded-lg mx-auto">
                                     @else
                                         <div class="flex items-center space-x-3 text-gray-600">
@@ -167,7 +167,7 @@
                                         </div>
                                     @endif
                                     <div class="mt-3">
-                                        <a href="{{ Storage::url($pesanan->file_desain_bordir) }}" 
+                                        <a href="{{ Storage::url($pesanan->file_desain_bordir) }}"
                                            target="_blank"
                                            class="inline-flex items-center space-x-2 text-slate-600 hover:text-slate-800 font-medium">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -186,8 +186,8 @@
                                 <label class="block text-sm font-medium text-gray-600 mb-3">Nama Tag</label>
                                 <div class="border border-gray-200 rounded-lg p-4">
                                     @if(in_array(pathinfo($pesanan->file_nama_tag, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png']))
-                                        <img src="{{ Storage::url($pesanan->file_nama_tag) }}" 
-                                             alt="Nama Tag" 
+                                        <img src="{{ Storage::url($pesanan->file_nama_tag) }}"
+                                             alt="Nama Tag"
                                              class="max-w-full h-auto max-h-64 rounded-lg mx-auto">
                                     @else
                                         <div class="flex items-center space-x-3 text-gray-600">
@@ -198,7 +198,7 @@
                                         </div>
                                     @endif
                                     <div class="mt-3">
-                                        <a href="{{ Storage::url($pesanan->file_nama_tag) }}" 
+                                        <a href="{{ Storage::url($pesanan->file_nama_tag) }}"
                                            target="_blank"
                                            class="inline-flex items-center space-x-2 text-slate-600 hover:text-slate-800 font-medium">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -219,18 +219,18 @@
                 <!-- Status Timeline -->
                 <div class="bg-white rounded-2xl shadow-lg p-6">
                     <h3 class="text-lg font-bold text-gray-900 mb-4">Status Pesanan</h3>
-                    
+
                     <div class="space-y-4">
                         <div class="flex items-center space-x-3">
                             <div class="w-3 h-3 {{ $pesanan->status === 'pending' ? 'bg-yellow-500' : 'bg-gray-300' }} rounded-full"></div>
                             <span class="text-sm {{ $pesanan->status === 'pending' ? 'font-semibold text-yellow-700' : 'text-gray-500' }}">Pending</span>
                         </div>
-                        
+
                         <div class="flex items-center space-x-3">
                             <div class="w-3 h-3 {{ $pesanan->status === 'diproses' ? 'bg-blue-500' : 'bg-gray-300' }} rounded-full"></div>
                             <span class="text-sm {{ $pesanan->status === 'diproses' ? 'font-semibold text-blue-700' : 'text-gray-500' }}">Diproses</span>
                         </div>
-                        
+
                         <div class="flex items-center space-x-3">
                             <div class="w-3 h-3 {{ $pesanan->status === 'selesai' ? 'bg-green-500' : 'bg-gray-300' }} rounded-full"></div>
                             <span class="text-sm {{ $pesanan->status === 'selesai' ? 'font-semibold text-green-700' : 'text-gray-500' }}">Selesai</span>
@@ -241,10 +241,10 @@
                 <!-- Actions -->
                 <div class="bg-white rounded-2xl shadow-lg p-6">
                     <h3 class="text-lg font-bold text-gray-900 mb-4">Aksi</h3>
-                    
+
                     <div class="space-y-3">
                         @if($pesanan->status === 'pending')
-                            <a href="https://wa.me/{{ $pesanan->formatted_whatsapp }}?text={{ $pesanan->generateWhatsappMessage() }}" 
+                            <a href="https://wa.me/{{ $pesanan->formatted_whatsapp }}?text={{ $pesanan->generateWhatsappMessage() }}"
                                target="_blank"
                                class="w-full inline-flex items-center justify-center space-x-2 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200">
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -253,16 +253,16 @@
                                 <span>Hubungi via WhatsApp</span>
                             </a>
                         @endif
-                        
-                        <a href="{{ route('pesanan.riwayat') }}" 
+
+                        <a href="{{ route('pesanan.riwayat') }}"
                            class="w-full inline-flex items-center justify-center space-x-2 bg-slate-600 hover:bg-slate-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                             </svg>
                             <span>Kembali ke Riwayat</span>
                         </a>
-                        
-                        <a href="{{ route('pesanan.index') }}" 
+
+                        <a href="{{ route('pesanan.index') }}"
                            class="w-full inline-flex items-center justify-center space-x-2 bg-white hover:bg-gray-50 text-slate-600 font-semibold py-3 px-4 rounded-lg border-2 border-slate-600 transition-colors duration-200">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -275,7 +275,7 @@
                 <!-- Info Layanan -->
                 <div class="bg-white rounded-2xl shadow-lg p-6">
                     <h3 class="text-lg font-bold text-gray-900 mb-4">Info Layanan</h3>
-                    
+
                     <div class="space-y-3">
                         @if($pesanan->layanan->estimasi_waktu)
                             <div class="flex items-center text-sm text-gray-600">
@@ -285,7 +285,7 @@
                                 <span>Estimasi: {{ $pesanan->layanan->formatted_estimasi }}</span>
                             </div>
                         @endif
-                        
+
                         @if($pesanan->layanan->minimal_order)
                             <div class="flex items-center text-sm text-gray-600">
                                 <svg class="w-4 h-4 mr-2 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -294,7 +294,7 @@
                                 <span>Min. Order: {{ $pesanan->layanan->formatted_minimal_order }}</span>
                             </div>
                         @endif
-                        
+
                         @if($pesanan->layanan->perkiraan_harga)
                             <div class="flex items-center text-sm text-gray-600">
                                 <svg class="w-4 h-4 mr-2 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">

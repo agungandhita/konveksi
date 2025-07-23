@@ -84,8 +84,8 @@
                                     <p class="text-sm font-medium text-gray-600 mb-1">Ukuran</p>
                                     <p class="text-gray-900 font-semibold">
                                         {{ $item->ukuran_baju }}
-                                        @if($item->ukuran_baju === 'Custom' && $item->ukuran_custom)
-                                            <span class="text-sm text-gray-500">({{ $item->ukuran_custom }})</span>
+                                        @if($item->ukuran_custom)
+                                            <span class="text-sm text-gray-500">(Custom: {{ $item->ukuran_custom }})</span>
                                         @endif
                                     </p>
                                 </div>
