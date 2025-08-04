@@ -14,13 +14,7 @@
         <!-- Menu Kanan -->
         <div class="flex items-center space-x-4">
             <!-- Notifikasi -->
-            <div class="relative">
-                <button id="notification-toggle" class="p-2 rounded-lg hover:bg-slate-100 transition-colors relative">
-                    <i class="fas fa-bell text-slate-600"></i>
-                    <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">3</span>
-                </button>
-                @include('admin.partials.norifikasi')
-            </div>
+
 
             <!-- Profile Dropdown -->
             <div class="relative">
